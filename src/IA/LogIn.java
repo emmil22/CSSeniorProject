@@ -1,6 +1,5 @@
 package IA;
 
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.*;
-
 
 public class LogIn implements ActionListener{
 	
@@ -49,7 +47,6 @@ public class LogIn implements ActionListener{
 	private JTextField apt;
 	private JTextField act;
 	
-
 	//Database Variables
 	DBConnectionManagerSingleton dbc;
 	Connection conn;
@@ -64,34 +61,33 @@ public class LogIn implements ActionListener{
 		try {
 			dbc = DBConnectionManagerSingleton.getInstance();
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		conn = dbc.getConnection();
 		stmt = dbc.getStatement();
 			
-			String viewRec = "SELECT * from USER_INFO";
-			ResultSet rs;
-			try {
-				rs = stmt.executeQuery(viewRec);
+		String viewRec = "SELECT * from USER_INFO";
+		ResultSet rs;
+		try {
+			rs = stmt.executeQuery(viewRec);
 			
-			
-
-				while (rs.next()) {
-					String fn = rs.getString("FIRST_NAME");
-					String ln = rs.getString("LAST_NAME");
-					String us = rs.getString("USERNAME");
-					String p = rs.getString("PASSWORD");
-					String sq = rs.getString("SECURITY_QUESTION");
-					String sa = rs.getString("SECURITY_ANSWER");
-					String h = rs.getString("HINT");
-					User u = new User(fn, ln, us, p, sq, sa, h);
-					users.add(u);
-					System.out.println(fn);
-				}
-			}catch (SQLException e) {
-	
-				e.printStackTrace();
+			while (rs.next()) {
+				String fn = rs.getString("FIRST_NAME");
+				String ln = rs.getString("LAST_NAME");
+				String us = rs.getString("USERNAME");
+				String p = rs.getString("PASSWORD");
+				String sq = rs.getString("SECURITY_QUESTION");
+				String sa = rs.getString("SECURITY_ANSWER");
+				String h = rs.getString("HINT");
+				User u = new User(fn, ln, us, p, sq, sa, h);
+				users.add(u);
+				System.out.println(fn);
 			}
+		}catch (SQLException e) {
+
+			e.printStackTrace();
+		}
 		
 		logInScreen = new JFrame("Log In");
 		logInScreen.setLayout(new FlowLayout());
