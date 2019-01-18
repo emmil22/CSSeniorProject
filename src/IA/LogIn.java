@@ -61,6 +61,7 @@ public class LogIn implements ActionListener{
 		try {
 			dbc = DBConnectionManagerSingleton.getInstance();
 		} catch (Exception e) {
+			System.err.println("Couldn't establish a proper database connection.");
 			e.printStackTrace();
 		}
 		
