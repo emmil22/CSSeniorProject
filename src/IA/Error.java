@@ -2,7 +2,7 @@ package IA;
 
 import java.util.Date;
 
-public class Errors {
+public class Error {
 	private String bMic;
 	private String rMic;
 	private String error;
@@ -10,7 +10,7 @@ public class Errors {
 	
 
 	
-	public Errors() {
+	public Error() {
 		
 		this.bMic = "";
 		this.rMic = "";
@@ -19,7 +19,7 @@ public class Errors {
 	
 	}
 	
-	public Errors(String bMic, String rMic, 
+	public Error(String bMic, String rMic, 
 			String error, String time) {
 		
 		this.bMic = bMic;
@@ -30,13 +30,12 @@ public class Errors {
 		
 	}
 	
-	public Errors(String bMic, String rMic, 
-			String error, String time) {
+	public Error(String bMic, String rMic, 
+			String error) {
 		
 		this.bMic = bMic;
 		this.rMic = rMic;
 		this.error = error;
-		this.time = time;
 		
 	}
 	
@@ -60,22 +59,22 @@ public class Errors {
 		return this.rMic;
 	}
 	
-	public void seterror(String error) {
+	public void setError(String error) {
 		
 		this.error = error;
 	}
 	
-	public String geterror() {
+	public String getError() {
 		
 		return this.error;
 	}
 	
-	public void settime(String time) {
+	public void setTime(String time) {
 		
 		this.time = time;
 	}
 	
-	public String gettime() {
+	public String getTime() {
 		
 		return this.time;
 	}

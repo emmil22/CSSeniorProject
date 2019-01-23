@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class ErrorDatabase {
 	
-	public ArrayList<User> users = new ArrayList<User>();
+	public ArrayList<Error> errors = new ArrayList<Error>();
 
 	PreparedStatement ps;
 	Statement stmt;
@@ -21,10 +21,10 @@ public class ErrorDatabase {
 	
 	}
 	
-	public UserDatabase() throws Exception {
+	public ErrorDatabase() throws Exception {
 		DBConnectionManagerSingleton dbc = DBConnectionManagerSingleton.getInstance();
 		Connection conn = dbc.getConnection();
-		String insertRecord = "INSERT INTO USER_INFO VALUES(?, ?, ?, ?, ?, ?, ?)";
+		String insertRecord = "INSERT INTO ERROR_LOG VALUES(?, ?, ?, ?, ?, ?, ?)";
 		 ps = conn.prepareStatement(insertRecord);
 		
 		stmt = dbc.getStatement();
@@ -32,16 +32,16 @@ public class ErrorDatabase {
 	
 	public void doTableStuff() throws Exception {
 		//createDBTable();
-		User u = new User();
-		insertDBRecord(u);
+		Error e = new Error();
+		insertDBRecord(e);
 		//dropTable();
 	}
 	
 	
 	public  void createDBTable() throws Exception {
-		String TableString = "Create table ERROR_INFO (FIRST_NAME varchar (30), LAST_NAME "
-				+ "varchar (35), USERNAME varchar (30) primary key, PASSWORD varchar (30), "
-				+ "SECURITY_QUESTION varchar (100), SECURITY_ANSWER varchar(30), HINT varchar(30))";
+		String TableString = "Create table ERROR_LOG(BROKEN_MIC varchar (30) primary key, REPLACED_MIC "
+				+ "varchar (35), ERROR varchar (100), TIME varchar (30))";
+				
 		 stmt.executeUpdate(TableString);
 	}
 	public  void insertDBRecord(User u) throws Exception {
