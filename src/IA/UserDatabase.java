@@ -49,10 +49,10 @@ public class UserDatabase {
 		ps.setString(1,  u.getfName());
 		ps.setString(2,  u.getlName());
 		ps.setString(3,  u.getuName());
-		ps.setString(4,  u.getpassword());
+		ps.setString(4,  u.getPassword());
 		ps.setString(5,  u.getsQuestion());
 		ps.setString(6,  u.getsAnswer());
-		ps.setString(7,  u.gethint());
+		ps.setString(7,  u.getHint());
 		ps.execute();
 		ps.clearParameters();
 	}

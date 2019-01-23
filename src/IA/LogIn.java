@@ -1,5 +1,6 @@
 package IA;
 
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.*;
+
+import Reference.CustomerOrder;
+
 
 public class LogIn implements ActionListener{
 	
@@ -27,6 +31,7 @@ public class LogIn implements ActionListener{
 	private JTextField cast5;
 	private JTextField cast6;
 	private JButton cab;
+	private JButton dt;
 	private JComboBox<String> securityQuestions;
 	String[] questions = {"What is the name of your favorite childhood friend?", "What is your favorite Disney movie?",
 			"What school did you attend for sixth grade?", "What was the make and model of your first car?",
@@ -47,13 +52,20 @@ public class LogIn implements ActionListener{
 	private JTextField apt;
 	private JTextField act;
 	
+
 	//Database Variables
 	DBConnectionManagerSingleton dbc;
 	Connection conn;
 	Statement stmt;
 	private User u;
 	ArrayList<User> users = new ArrayList<User>();
-	
+	private JFrame frame2;
+	private JScrollPane jscrlp;
+	private boolean tableCreated = false;
+	private Object[][] obj;
+	private JTable table;
+	String [] headings = {"First Name", "Last Name", "Username", "Password", 
+			"Security Question","Security Answer", "Hint"};
 	/*******************************************************************************************************************************/
 	//Log In Screen
 	LogIn() {
@@ -61,34 +73,34 @@ public class LogIn implements ActionListener{
 		try {
 			dbc = DBConnectionManagerSingleton.getInstance();
 		} catch (Exception e) {
-			System.err.println("Couldn't establish a proper database connection.");
-			e.printStackTrace();
 		}
 		
 		conn = dbc.getConnection();
 		stmt = dbc.getStatement();
 			
-		String viewRec = "SELECT * from USER_INFO";
-		ResultSet rs;
-		try {
-			rs = stmt.executeQuery(viewRec);
+			String viewRec = "SELECT * from USER_INFO";
+			ResultSet rs;
+			try {
+				rs = stmt.executeQuery(viewRec);
 			
-			while (rs.next()) {
-				String fn = rs.getString("FIRST_NAME");
-				String ln = rs.getString("LAST_NAME");
-				String us = rs.getString("USERNAME");
-				String p = rs.getString("PASSWORD");
-				String sq = rs.getString("SECURITY_QUESTION");
-				String sa = rs.getString("SECURITY_ANSWER");
-				String h = rs.getString("HINT");
-				User u = new User(fn, ln, us, p, sq, sa, h);
-				users.add(u);
-				System.out.println(fn);
-			}
-		}catch (SQLException e) {
+			
 
-			e.printStackTrace();
-		}
+				while (rs.next()) {
+					String fn = rs.getString("FIRST_NAME");
+					String ln = rs.getString("LAST_NAME");
+					String us = rs.getString("USERNAME");
+					String p = rs.getString("PASSWORD");
+					String sq = rs.getString("SECURITY_QUESTION");
+					String sa = rs.getString("SECURITY_ANSWER");
+					String h = rs.getString("HINT");
+					User u = new User(fn, ln, us, p, sq, sa, h);
+					users.add(u);
+					System.out.println(fn);
+				}
+			}catch (SQLException e) {
+	
+				e.printStackTrace();
+			}
 		
 		logInScreen = new JFrame("Log In");
 		logInScreen.setLayout(new FlowLayout());
@@ -146,6 +158,12 @@ public class LogIn implements ActionListener{
 		createAccountScreen.setLayout(new FlowLayout());
 		createAccountScreen.setSize(screen);
 		createAccountScreen.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		
+		frame2 = new JFrame("Customer Order Data");
+		frame2.getContentPane().setLayout(new FlowLayout());
+		frame2.setSize(1000, 500);
+		frame2.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		updateTable();
 		//createAcoountScreen.setLayout(new Layout());
 		//createAccountScreen.setBounds(0,0,0,0); 
 		JLabel heading = new JLabel("New User");
@@ -172,6 +190,7 @@ public class LogIn implements ActionListener{
 		cast6 =new JTextField("", 50);
 
 		cab = new JButton("Create User");
+		dt = new JButton("Display Table");
 	   // cast5.setEchoChar('*');
 		createAccountScreen.add(heading);
 		createAccountScreen.add(fName);
@@ -191,8 +210,9 @@ public class LogIn implements ActionListener{
 		
 		
 		createAccountScreen.add(cab);
-		
+		createAccountScreen.add(dt);
 		cab.addActionListener(this);
+		dt.addActionListener(this);
 
 		//b1.addActionListener(this);
 		
@@ -277,18 +297,42 @@ public class LogIn implements ActionListener{
 			createAccountScreen.setVisible(true);
 		}
 		if(ae.getActionCommand().equals("Create User")) {
-			u = new User(cast1.getText(),cast2.getText(), cast3.getText(),
-			cast4.getText(),(String)securityQuestions.getSelectedItem(),
-			cast5.getText(), cast6.getText());
+			if(cast1.getText().length() == 0 || cast2.getText().length() == 0||cast3.getText().length() == 0 ||cast4.getText()
+					.length() == 0 ||cast5.getText().length() == 0 ||cast6.getText().length() == 0 ) {
+				JOptionPane.showMessageDialog(null, "Please enter values in all fields");
+			}
+					
+					u = new User(cast1.getText(), cast2.getText(),cast3.getText(), cast4.getText(), (String) securityQuestions
+							.getSelectedItem(), cast5.getText(), cast6.getText());
+					try {
+						stmt.executeUpdate("Insert into USER_INFO values("+"'" + cast1.getText() + "',' "
+					+ cast2.getText() + "','" + cast3.getText() + "','"+ cast4.getText() + "','"+ (String) securityQuestions
+					.getSelectedItem() + "','" + cast5.getText() + "','"+ cast6.getText() +"')");
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				
+				
+				
+
+				this.users.add(u);
+				updateTable();
+				
+				t1.setText("");
+				t2.setText("");
+			
 			cast1.setText("");
 			cast2.setText("");
 			cast3.setText("");
 			cast4.setText("");
 			cast5.setText("");
 			cast6.setText("");
-		
 		}
-		else if(ae.getActionCommand().equals("Forgot Password")) {
+		
+		if(ae.getActionCommand().equals("Display Table")) {
+			frame2.setVisible(true);
+		}
+		if(ae.getActionCommand().equals("Forgot Password")) {
 			forgotPasswordScreen.setVisible(true);
 			
 			if(ae.getActionCommand().equals("Enter")) {
@@ -313,12 +357,51 @@ public class LogIn implements ActionListener{
 				}
 			
 		}
-		else if(ae.getActionCommand().equals("Admin Log In")) {
+		if(ae.getActionCommand().equals("Admin Log In")) {
 			adminLogInScreen.setVisible(true);
 			
 		}
-		else if(ae.getActionCommand().equals("Hint")) {
+		if(ae.getActionCommand().equals("Hint")) {
 			JOptionPane.showMessageDialog(logInScreen,"Your hint is: " );
+		}
+		
+	}
+	
+	public void updateTable() {
+		
+		
+		if (tableCreated) {
+			frame2.remove(jscrlp);
+		}
+	
+		tableCreated = true;
+		
+		 obj = new Object[users.size()][20];
+		for(int i = 0; i < users.size(); i++) {
+			obj[i][0] = this.users.get(i).getfName();
+			obj[i][1] = this.users.get(i).getlName();
+			obj[i][2] = this.users.get(i).getuName();
+			obj[i][3] = this.users.get(i).getPassword();
+			obj[i][4] = this.users.get(i).getsQuestion();
+			obj[i][5] = this.users.get(i).getsAnswer();
+			obj[i][6] = this.users.get(i).getHint();
+		}
+		
+		table = new JTable(obj, headings)
+		{
+		    public boolean isCellEditable(int row, int column) {                
+		        return false;               
+		    };
+		};
+		jscrlp = new JScrollPane(table);
+		table.getTableHeader().setReorderingAllowed(false);
+
+		table.setPreferredScrollableViewportSize(new Dimension(980, 500));
+		
+		frame2.add(jscrlp);
+
+		if (frame2.isVisible()) {
+			frame2.setVisible(true);
 		}
 		
 	}

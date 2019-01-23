@@ -82,7 +82,7 @@ public class User {
 		this.password = password;
 	}
 	
-	public String getpassword() {
+	public String getPassword() {
 		
 		return this.password;
 	}
@@ -110,7 +110,7 @@ public class User {
 		
 		this.hint = hint;
 		}
-	public String gethint() {
+	public String getHint() {
 			 
 		return this.hint;
 	}
