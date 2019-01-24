@@ -19,8 +19,8 @@ public class LogIn implements ActionListener{
 	
 	//Log In Screen Variable
 	private JFrame logInScreen;
-	private JTextField t1;
-	private JTextField t2;
+	private JTextField username;
+	private TextField password;
 	
 	//Create Account Screen Variables
 	private JFrame createAccountScreen;
@@ -70,7 +70,7 @@ public class LogIn implements ActionListener{
 	//Log In Screen
 	LogIn() {
 		
-		try {
+		/*try {
 			dbc = DBConnectionManagerSingleton.getInstance();
 		} catch (Exception e) {
 		}
@@ -101,57 +101,61 @@ public class LogIn implements ActionListener{
 			}catch (SQLException e) {
 	
 				e.printStackTrace();
-			}
+			}*/
 		
 		logInScreen = new JFrame("Log In");
-		logInScreen.setLayout(new FlowLayout());
+		logInScreen.setLayout(null);
 		logInScreen.setVisible(true);
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 		logInScreen.setSize(screen);
+		logInScreen.setBackground(Color.black);
+		logInScreen.setForeground(Color.black);
+		
 		logInScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JLabel label1 = new JLabel("Username: ");
 		JLabel label2 = new JLabel("Password: ");
 		JLabel label3 = new JLabel("Ragtime");
-		label3.setFont(new Font("Times New Roman", Font.BOLD, 300));
-		label2.setFont(new Font("Times New Roman", Font.PLAIN, 180));
-		label1.setFont(new Font("Times New Roman", Font.PLAIN, 180));
-		label3.setForeground(Color.pink);
-		t1 = new JTextField("", 50);
-		t2 = new JTextField("", 50);
+		label3.setFont(new Font("Times New Roman", Font.BOLD, 100));
+		label2.setFont(new Font("Times New Roman", Font.PLAIN, 40));
+		label1.setFont(new Font("Times New Roman", Font.PLAIN, 40));
+		label3.setForeground(Color.white);
+		username = new JTextField("", 30);
+		password = new TextField("");
+		password.setEchoChar('*');
+		
 		
 		JButton b1 = new JButton("Hint");
 		JButton b2 = new JButton("Forgot Password");
 		JButton b3 = new JButton("Create Account");
 		JButton b4 = new JButton("Admin Log In");
 		
-		 b1.setPreferredSize(new Dimension(550, 100));
-		 b2.setPreferredSize(new Dimension(550, 100));
-		 b3.setPreferredSize(new Dimension(550, 100));
-		 b4.setPreferredSize(new Dimension(550, 100));
-		
-		label1.setVerticalAlignment(SwingConstants.CENTER);
-		label2.setVerticalAlignment(SwingConstants.CENTER);
-		t1.setHorizontalAlignment(SwingConstants.CENTER);
-		t2.setHorizontalAlignment(SwingConstants.CENTER);
-		label3.setVerticalAlignment(SwingConstants.NORTH);
-		label2.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		logInScreen.add(label3);
 		logInScreen.add(label1);
-		logInScreen.add(t1);
+		logInScreen.add(username);
 		logInScreen.add(label2);
-		logInScreen.add(t2);
+		logInScreen.add(password);
 		logInScreen.add(b1);
 		logInScreen.add(b2);
 		logInScreen.add(b3);
 		logInScreen.add(b4);
+		
+		label1.setBounds(250,150,400,400);
+		username.setBounds(450, 325, 300, 45);
+		label2.setBounds(250,200, 250, 400);
+		password.setBounds(300, 375, 500, 45);
+		label3.setBounds(450,50, 600, 100);
+		b1.setBounds(250,500, 175, 75);
+		b2.setBounds(450,500, 175, 75);
+		b3.setBounds(650,500, 175, 75);
+		b4.setBounds(850,500, 175, 75);
 		b1.addActionListener(this);
 		b2.addActionListener(this);
 		b3.addActionListener(this);
 		b4.addActionListener(this);
 		b1.setBackground(Color.pink);
-		b1.setForeground(Color.white);
+		b1.setForeground(Color.black);
 	/*********************************************************************************************************************/
 		//Create Account Screen
 		
@@ -164,7 +168,7 @@ public class LogIn implements ActionListener{
 		frame2.getContentPane().setLayout(new FlowLayout());
 		frame2.setSize(1000, 500);
 		frame2.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		updateTable();
+		//updateTable();
 		//createAcoountScreen.setLayout(new Layout());
 		//createAccountScreen.setBounds(0,0,0,0); 
 		JLabel heading = new JLabel("New User");
@@ -304,7 +308,7 @@ public class LogIn implements ActionListener{
 				JOptionPane.showMessageDialog(null, "Please enter values in all fields");
 			}
 					
-					u = new User(cast1.getText(), cast2.getText(),cast3.getText(), cast4.getText(), (String) securityQuestions
+				/*	u = new User(cast1.getText(), cast2.getText(),cast3.getText(), cast4.getText(), (String) securityQuestions
 							.getSelectedItem(), cast5.getText(), cast6.getText());
 					try {
 						stmt.executeUpdate("Insert into USER_INFO values("+"'" + cast1.getText() + "',' "
@@ -319,9 +323,10 @@ public class LogIn implements ActionListener{
 
 				this.users.add(u);
 				updateTable();
+				*/
 				
-				t1.setText("");
-				t2.setText("");
+				username.setText("");
+				password.setText("");
 			
 			cast1.setText("");
 			cast2.setText("");
@@ -369,7 +374,7 @@ public class LogIn implements ActionListener{
 		
 	}
 	
-	public void updateTable() {
+	/*public void updateTable() {
 		
 		
 		if (tableCreated) {
@@ -407,7 +412,7 @@ public class LogIn implements ActionListener{
 		}
 		
 	}
-	
+	*/
 	public static void main(String[] args) {
 
 		SwingUtilities.invokeLater(new Runnable() {
