@@ -70,14 +70,14 @@ public class LogIn implements ActionListener{
 	//Log In Screen
 	LogIn() {
 		
-	/*	try {
+		try {
 			dbc = DBConnectionManagerSingleton.getInstance();
 		} catch (Exception e) {
 		}
-		*/
 		
-		//conn = dbc.getConnection();
-		//stmt = dbc.getStatement();
+		
+		conn = dbc.getConnection();
+		stmt = dbc.getStatement();
 			
 			String viewRec = "SELECT * from USER_INFO";
 			ResultSet rs;
@@ -112,7 +112,7 @@ public class LogIn implements ActionListener{
 		
 		JLabel label1 = new JLabel("Username: ");
 		JLabel label2 = new JLabel("Password: ");
-		JLabel label3 = new JLabel("Musical Name");
+		JLabel label3 = new JLabel("Ragtime");
 		label3.setFont(new Font("Times New Roman", Font.BOLD, 300));
 		label2.setFont(new Font("Times New Roman", Font.PLAIN, 180));
 		label1.setFont(new Font("Times New Roman", Font.PLAIN, 180));
@@ -296,9 +296,9 @@ public class LogIn implements ActionListener{
 	public void actionPerformed(ActionEvent ae) {
 		if(ae.getActionCommand().equals("Create Account")) {
 			createAccountScreen.setVisible(true);
+			logInScreen.dispose();
 		}
 		if(ae.getActionCommand().equals("Create User")) {
-			logInScreen.dispose();
 			if(cast1.getText().length() == 0 || cast2.getText().length() == 0||cast3.getText().length() == 0 ||cast4.getText()
 					.length() == 0 ||cast5.getText().length() == 0 ||cast6.getText().length() == 0 ) {
 				JOptionPane.showMessageDialog(null, "Please enter values in all fields");

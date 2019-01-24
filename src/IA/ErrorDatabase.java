@@ -15,7 +15,7 @@ public class ErrorDatabase {
 	Statement stmt;
 	
 	public static void main(String[] args) throws Exception{
-		UserDatabase pse = new UserDatabase();
+		ErrorDatabase pse = new ErrorDatabase();
 	
 		pse.doTableStuff();
 	
@@ -24,7 +24,7 @@ public class ErrorDatabase {
 	public ErrorDatabase() throws Exception {
 		DBConnectionManagerSingleton dbc = DBConnectionManagerSingleton.getInstance();
 		Connection conn = dbc.getConnection();
-		String insertRecord = "INSERT INTO ERROR_LOG VALUES(?, ?, ?, ?, ?, ?, ?)";
+		String insertRecord = "INSERT INTO ERROR_LOG VALUES(?, ?, ?, ?)";
 		 ps = conn.prepareStatement(insertRecord);
 		
 		stmt = dbc.getStatement();
