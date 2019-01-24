@@ -70,13 +70,14 @@ public class LogIn implements ActionListener{
 	//Log In Screen
 	LogIn() {
 		
-		try {
+	/*	try {
 			dbc = DBConnectionManagerSingleton.getInstance();
 		} catch (Exception e) {
 		}
+		*/
 		
-		conn = dbc.getConnection();
-		stmt = dbc.getStatement();
+		//conn = dbc.getConnection();
+		//stmt = dbc.getStatement();
 			
 			String viewRec = "SELECT * from USER_INFO";
 			ResultSet rs;
@@ -297,6 +298,7 @@ public class LogIn implements ActionListener{
 			createAccountScreen.setVisible(true);
 		}
 		if(ae.getActionCommand().equals("Create User")) {
+			logInScreen.dispose();
 			if(cast1.getText().length() == 0 || cast2.getText().length() == 0||cast3.getText().length() == 0 ||cast4.getText()
 					.length() == 0 ||cast5.getText().length() == 0 ||cast6.getText().length() == 0 ) {
 				JOptionPane.showMessageDialog(null, "Please enter values in all fields");

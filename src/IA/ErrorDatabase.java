@@ -44,19 +44,17 @@ public class ErrorDatabase {
 				
 		 stmt.executeUpdate(TableString);
 	}
-	public  void insertDBRecord(User u) throws Exception {
-		ps.setString(1,  u.getfName());
-		ps.setString(2,  u.getlName());
-		ps.setString(3,  u.getuName());
-		ps.setString(4,  u.getPassword());
-		ps.setString(5,  u.getsQuestion());
-		ps.setString(6,  u.getsAnswer());
-		ps.setString(7,  u.getHint());
+	public  void insertDBRecord(Error e) throws Exception {
+		ps.setString(1,  e.getbMic());
+		ps.setString(2,  e.getrMic());
+		ps.setString(3,  e.getError());
+		ps.setString(4,  e.getTime());
+		
 		ps.execute();
 		ps.clearParameters();
 	}
 	public  void dropTable() throws Exception {
-		String drop = "DROP TABLE USER_INFO";
+		String drop = "DROP TABLE ERROR_LOG";
 		stmt.executeUpdate(drop);
 	}
 }
