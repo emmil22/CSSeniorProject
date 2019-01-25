@@ -31,7 +31,7 @@ public class LogIn implements ActionListener {
 
 	
 	//Create Account Screen Variables
-	private String AdminCode = "9od!P74%";
+	private String AdminCode = "s738*!dp";
 	private JFrame createAccountScreen;
 	private JTextField FirstName;
 	private JTextField LastName;
@@ -69,9 +69,16 @@ public class LogIn implements ActionListener {
 	private JFrame ErrorMessage;
 	private JTextField BrokenMic;
 	private JTextField error;
-	
-	//Create Musical Screen
-	private JFrame CreateMusicalScreen;
+	private JButton confirmError;
+	private JFrame MusicalFrame;
+	private JTextField mName;
+	private JTextField actor;
+	private JTextField role;
+	private JTextField songsin;
+	private JButton confirmMusical;
+	//private JButton 
+	//private List<User> AllUsers;
+	private List<Musical> MusicalList;
 	
 
 	//Database Variables
@@ -141,6 +148,7 @@ public class LogIn implements ActionListener {
 		
 		//Create List of Users to login
 		AllUsers = new ArrayList<>();
+		AdminUser = new ArrayList<>();
 		LogInUser = null;
 		
 		//Create and edit labels
@@ -396,6 +404,63 @@ public class LogIn implements ActionListener {
 		
 		JLabel brokenMic = new JLabel("Please enter the number of the broken mic.");
 		JLabel Error = new JLabel("Please state what error occured.");
+		JTextField bm = new JTextField("",50);
+		JTextField err = new JTextField("",50);
+		confirmError = new JButton("Confirm Error");
+		
+		ErrorMessage.add(brokenMic);
+		ErrorMessage.add(Error);
+		ErrorMessage.add(bm);
+		ErrorMessage.add(err);
+		ErrorMessage.add(confirmError);
+		
+		brokenMic.setBounds(50,200, 400,50 );
+		Error.setBounds(125,220, 400,50 );
+		bm.setBounds(50,250, 400,50 );
+		err.setBounds(125,270, 400,50 );
+		confirmError.setBounds(50,350, 400,50 );
+		
+		/////////////////////////////////////////
+		
+		MusicalFrame = new JFrame("Musical");
+		MusicalFrame.setLayout(null);
+		MusicalFrame.setSize(screen);
+		MusicalFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		
+		confirmMusical = new JButton("Confirm Musical");
+		JLabel MName = new JLabel("Please enter musical name:");
+		JLabel Actor = new JLabel("Please enter actor's name:");
+		JLabel Roles = new JLabel("Please enter the role(s) the actor has: ");
+		JLabel Songsin = new JLabel("Please list all the songs the actor is in seperated by a '''");
+		
+		mName = new JTextField("",50);
+		actor = new JTextField("",50);
+		role = new JTextField("",50);
+		songsin = new JTextField("",50);
+		
+		MusicalFrame.add(confirmMusical);
+		MusicalFrame.add(MName);
+		MusicalFrame.add(Actor);
+		MusicalFrame.add(Roles);
+		MusicalFrame.add(Songsin);
+		MusicalFrame.add(mName);
+		MusicalFrame.add(actor);
+		MusicalFrame.add(role);
+		MusicalFrame.add(songsin);
+		
+		
+		MName.setBounds(50,200, 400,50 );
+		mName.setBounds(50,220, 400,50 );
+		Actor.setBounds(50,250, 400,50 );
+		actor.setBounds(50,270, 400,50 );
+		Roles.setBounds(50,300, 400,50 );
+		role.setBounds(50,320, 400,50 );
+		Songsin.setBounds(50,350, 400,50 );
+		songsin.setBounds(50,370, 400,50 );
+		confirmMusical.setBounds(325,500, 100,50 );
+		
+		confirmMusical.addActionListener(this);
+		
 		
 		
 
@@ -413,14 +478,6 @@ public class LogIn implements ActionListener {
 	        } else {
 	            PasswordText.setEchoChar('*');
 	        }
-		
-		 /*JCheckBox cbLog = (JCheckBox) ae.getSource();
-	        if (cbLog.isSelected()) {
-	        	this.password.setEchoChar((char)0);
-	         
-	        } else {
-	            this.password.setEchoChar('*');
-	        }*/
 
 		
 	}
@@ -479,6 +536,13 @@ public class LogIn implements ActionListener {
 		        }
 	    }
 		
+		if(e.getActionCommand().equals("Create Musical")) {
+			MusicalFrame.setVisible(true);
+			//createMusical();
+			
+			
+		}
+		
 		if(e.getActionCommand().equals("Create Account")) {
 			createAccountScreen.setVisible(true);
 			logInScreen.dispose();
@@ -502,10 +566,11 @@ public class LogIn implements ActionListener {
 			JOptionPane.showMessageDialog(createAccountScreen,"User "
 					+ "successfuly created.");
 			}
-			else if(FirstName.getText().length() != 0 && LastName.getText().length() != 0&&
-					InitialUsername.getText().length() != 0 &&InitialPassword.getText()
-					.length() != 0 &&SecurityAnswer.getText().length() != 0 &&
-					Hint.getText().length() != 0 && aCode.getText().length() != 0) {
+			
+			else if(FirstName.getText().length() > 0 && LastName.getText().length() > 0 &&
+					InitialUsername.getText().length() > 0 &&InitialPassword.getText()
+					.length() > 0 &&SecurityAnswer.getText().length() > 0 &&
+					Hint.getText().length() > 0 && aCode.getText().length() > 0) {
 				if(aCode.getText().equals(AdminCode)) {
 				AdminUser.add(new User(FirstName.getText(), LastName.getText(),InitialUsername.
 						   getText(), InitialPassword.getText(), (String) securityQuestions
@@ -515,7 +580,7 @@ public class LogIn implements ActionListener {
 					JOptionPane.showMessageDialog(createAccountScreen,"Admin user "
 							+ "successfuly created.");
 				}
-				if(!(aCode.getText().equals(AdminCode))){
+				else{
 					JOptionPane.showMessageDialog(createAccountScreen, 
 							  "Invalid admin code.", "Failure", 
 							  JOptionPane.ERROR_MESSAGE);
@@ -552,7 +617,7 @@ public class LogIn implements ActionListener {
 			aCode.setText("");
 		}
 		if(e.getActionCommand().equals("SOS")) {
-			
+			ErrorMessage.setVisible(true);
 			
 		}
 		
@@ -561,6 +626,26 @@ public class LogIn implements ActionListener {
 		}
 		if(e.getActionCommand().equals("Forgot Password")) {
 			forgotPasswordScreen.setVisible(true);
+		}
+		if(e.getActionCommand().equals("Confirm Musical")) {
+			if(mName.getText().length() == 0 || actor.getText().length() == 0|| 
+					role.getText().length() == 0 ||songsin.getText().length() == 0) {
+				JOptionPane.showMessageDialog(createAccountScreen, 
+						  "Please answer all required fields.", "Failure", 
+						  JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+			MusicalList.add(new Musical(mName.getText(), actor.getText(),role.
+				   getText(), songsin.getText()));
+	
+			JOptionPane.showMessageDialog(createAccountScreen,"Data "
+					+ "successfuly created.");
+			}
+			
+		}
+		
+		if(e.getActionCommand().equals("Display Musical Table")) {
+			
 		}
 		if(e.getActionCommand().equals("Enter")) {
 			//passwordRecoveryScreen.setVisible(true);
@@ -603,6 +688,10 @@ public class LogIn implements ActionListener {
 	                }
 	            }
 		}
+		}
+		
+		if(e.getActionCommand().equals("Confirm Error")) {
+			
 		}
 		
 		
