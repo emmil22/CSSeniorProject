@@ -47,6 +47,13 @@ public class User {
 		
 	}
 	
+	public User( String uName, String password) {
+		
+		this.uName = uName;
+		this.password = password;
+		
+	}
+	
 	public void setfName(String fName) {
 		
 		this.fName = fName;

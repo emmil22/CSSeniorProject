@@ -1,4 +1,4 @@
-package IA;
+package Reference;
 
 
 import java.awt.*;

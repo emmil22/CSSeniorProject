@@ -4,34 +4,44 @@ package IA;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.AbstractAction;
+import javax.swing.JCheckBox;
 
 import javax.swing.*;
 
 import Reference.CustomerOrder;
 
 
-public class LogIn implements ActionListener{
+public class LogIn implements ActionListener {
 	
 	//Log In Screen Variable
 	private JFrame logInScreen;
 	private JTextField username;
-	private TextField password;
+	private TextField PasswordText;
+	private User LogInUser;
+	private List<User> AllUsers;
+	private List<User> AdminUser;
+
 	
 	//Create Account Screen Variables
+	private String AdminCode = "9od!P74%";
 	private JFrame createAccountScreen;
-	private JTextField cast1;
-	private JTextField cast2;
-	private JTextField cast3;
-	private JTextField cast4;
-	private JTextField cast5;
-	private JTextField cast6;
-	private JButton cab;
-	private JButton dt;
+	private JTextField FirstName;
+	private JTextField LastName;
+	private JTextField InitialUsername;
+	private JTextField InitialPassword;
+	private JTextField SecurityAnswer;
+	private JTextField Hint;
+	private JTextField aCode;
+	private JButton CreateAccount;
+	private JButton DisplayTable;
 	private JComboBox<String> securityQuestions;
 	String[] questions = {"What is the name of your favorite childhood friend?", "What is your favorite Disney movie?",
 			"What school did you attend for sixth grade?", "What was the make and model of your first car?",
@@ -39,18 +49,29 @@ public class LogIn implements ActionListener{
 	
 	//Forgot Password Screen Variables
 	private JFrame forgotPasswordScreen;
-	private JTextField sat;
+	private JTextField ResetAnswer;
 	
 	//Password Recovery Screen Variables
 	private JFrame passwordRecoveryScreen;
-	private JTextField npt;
-	private JTextField rnpt;
+	private JTextField NewPasswordText;
+	private JTextField rNewPasswordTextText;
 	
 	//Admin Log In Screen Variables
 	private JFrame adminLogInScreen;
 	private JTextField aunt;
 	private JTextField apt;
 	private JTextField act;
+	
+	//Server Screen Variables
+	private JFrame ServerScreen;
+	private JButton SOS;
+	private JButton CreateMusical;
+	private JFrame ErrorMessage;
+	private JTextField BrokenMic;
+	private JTextField error;
+	
+	//Create Musical Screen
+	private JFrame CreateMusicalScreen;
 	
 
 	//Database Variables
@@ -66,10 +87,15 @@ public class LogIn implements ActionListener{
 	private JTable table;
 	String [] headings = {"First Name", "Last Name", "Username", "Password", 
 			"Security Question","Security Answer", "Hint"};
+	
+	/*public LogIn(String text) {
+        super(text);
+    }*/
 	/*******************************************************************************************************************************/
 	//Log In Screen
 	LogIn() {
 		
+		//Create connection with database
 		/*try {
 			dbc = DBConnectionManagerSingleton.getInstance();
 		} catch (Exception e) {
@@ -103,6 +129,7 @@ public class LogIn implements ActionListener{
 				e.printStackTrace();
 			}*/
 		
+		//Create LogIn Screen Frame
 		logInScreen = new JFrame("Log In");
 		logInScreen.setLayout(null);
 		logInScreen.setVisible(true);
@@ -110,9 +137,13 @@ public class LogIn implements ActionListener{
 		logInScreen.setSize(screen);
 		logInScreen.setBackground(Color.black);
 		logInScreen.setForeground(Color.black);
-		
 		logInScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		//Create List of Users to login
+		AllUsers = new ArrayList<>();
+		LogInUser = null;
+		
+		//Create and edit labels
 		JLabel label1 = new JLabel("Username: ");
 		JLabel label2 = new JLabel("Password: ");
 		JLabel label3 = new JLabel("Ragtime");
@@ -120,51 +151,64 @@ public class LogIn implements ActionListener{
 		label2.setFont(new Font("Times New Roman", Font.PLAIN, 40));
 		label1.setFont(new Font("Times New Roman", Font.PLAIN, 40));
 		label3.setForeground(Color.white);
+		
+		//Create Textfields for input from user
 		username = new JTextField("", 30);
-		password = new TextField("");
-		password.setEchoChar('*');
+		PasswordText = new TextField("");
+		PasswordText.setEchoChar('*');     //Mask password
 		
+		//Create and label each button
+		JButton LogInButton = new JButton("Log In");
+		JButton HintButton = new JButton("Hint");
+		JButton fPassButton = new JButton("Forgot Password");
+		JButton CreateAccountButton = new JButton("Create Account");
+		JButton AdminLogInButton = new JButton("Admin Log In");
+		JCheckBox ShowPassword = new JCheckBox("Show Password");
 		
-		JButton b1 = new JButton("Hint");
-		JButton b2 = new JButton("Forgot Password");
-		JButton b3 = new JButton("Create Account");
-		JButton b4 = new JButton("Admin Log In");
-		
-		
+		//Add labels and textfields to the frame
 		logInScreen.add(label3);
 		logInScreen.add(label1);
 		logInScreen.add(username);
 		logInScreen.add(label2);
-		logInScreen.add(password);
-		logInScreen.add(b1);
-		logInScreen.add(b2);
-		logInScreen.add(b3);
-		logInScreen.add(b4);
+		logInScreen.add(PasswordText);
+		logInScreen.add(LogInButton);
+		logInScreen.add(HintButton);
+		logInScreen.add(fPassButton);
+		logInScreen.add(CreateAccountButton);
+		logInScreen.add(AdminLogInButton);
+		logInScreen.add(ShowPassword);
+				
+		//Format frame
+		label1.setBounds(375,300,185,75);
+		username.setBounds(575, 325, 300, 45);
+		label2.setBounds(375, 350, 175, 75);
+		PasswordText.setBounds(575, 375, 300, 40);
+		label3.setBounds(450,50, 400, 110);
+		ShowPassword.setBounds(575,425,150, 30);
+		LogInButton.setBounds(375,500, 485, 45);
+		HintButton.setBounds(250,600, 175, 75);
+		fPassButton.setBounds(450,600, 175, 75);
+		CreateAccountButton.setBounds(650,600, 175, 75);
+		AdminLogInButton.setBounds(850,600, 175, 75);
 		
-		label1.setBounds(250,150,400,400);
-		username.setBounds(450, 325, 300, 45);
-		label2.setBounds(250,200, 250, 400);
-		password.setBounds(300, 375, 500, 45);
-		label3.setBounds(450,50, 600, 100);
-		b1.setBounds(250,500, 175, 75);
-		b2.setBounds(450,500, 175, 75);
-		b3.setBounds(650,500, 175, 75);
-		b4.setBounds(850,500, 175, 75);
-		b1.addActionListener(this);
-		b2.addActionListener(this);
-		b3.addActionListener(this);
-		b4.addActionListener(this);
-		b1.setBackground(Color.pink);
-		b1.setForeground(Color.black);
+		//Evoke action listener
+		LogInButton.addActionListener(this);
+		HintButton.addActionListener(this);
+		fPassButton.addActionListener(this);
+		CreateAccountButton.addActionListener(this);
+		AdminLogInButton.addActionListener(this);
+		
+		HintButton.setBackground(Color.pink);
+		HintButton.setForeground(Color.black);
 	/*********************************************************************************************************************/
 		//Create Account Screen
 		
 		createAccountScreen = new JFrame("Create Account Screen");
-		createAccountScreen.setLayout(new FlowLayout());
+		createAccountScreen.setLayout(null);
 		createAccountScreen.setSize(screen);
 		createAccountScreen.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
-		frame2 = new JFrame("Customer Order Data");
+		frame2 = new JFrame("User Data");
 		frame2.getContentPane().setLayout(new FlowLayout());
 		frame2.setSize(1000, 500);
 		frame2.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -180,46 +224,77 @@ public class LogIn implements ActionListener{
 		JLabel sq = new JLabel("Security Question: ");
 		JLabel sa = new JLabel("Security Answer: ");
 		JLabel hint = new JLabel("Hint: ");
+		JLabel ACode = new JLabel("Admin Code(Optional): ");
 		
 		heading.setFont(new Font("Times New Roman", Font.BOLD, 110));
+		fName.setFont(new Font("Times New Roman", Font.PLAIN, 40));
+		lName.setFont(new Font("Times New Roman", Font.PLAIN, 40));
+		uName.setFont(new Font("Times New Roman", Font.PLAIN, 40));
+		password.setFont(new Font("Times New Roman", Font.PLAIN, 40));
+		sq.setFont(new Font("Times New Roman", Font.PLAIN, 40));
+		sa.setFont(new Font("Times New Roman", Font.PLAIN, 40));
+		hint.setFont(new Font("Times New Roman", Font.PLAIN, 40));
+		ACode.setFont(new Font("Times New Roman", Font.PLAIN, 40));
 		
 		securityQuestions = new JComboBox<String>(questions);
 		securityQuestions.addActionListener(this);
 		securityQuestions.setEditable(true);
 		
-		cast1 = new JTextField("", 50);
-		cast2 = new JTextField("", 50);
-		cast3 = new JTextField("", 50);
-		cast4 = new JTextField("", 50);
-		cast5 = new JTextField("", 50);
-		cast6 =new JTextField("", 50);
-
-		cab = new JButton("Create User");
-		dt = new JButton("Display Table");
-	   // cast5.setEchoChar('*');
+		FirstName = new JTextField("", 50);
+		LastName = new JTextField("", 50);
+		InitialUsername = new JTextField("", 50);
+		InitialPassword = new JTextField("", 50);
+		SecurityAnswer = new JTextField("", 50);
+		Hint =new JTextField("", 50);
+		aCode = new JTextField("", 50);
+		CreateAccount = new JButton("Create User");
+		DisplayTable = new JButton("Display Table");
+	   // SecurityAnswer.setEchoChar('*');
 		createAccountScreen.add(heading);
 		createAccountScreen.add(fName);
-		createAccountScreen.add(cast1);
+		createAccountScreen.add(FirstName);
 		createAccountScreen.add(lName);
-		createAccountScreen.add(cast2);
+		createAccountScreen.add(LastName);
 		createAccountScreen.add(uName);
-		createAccountScreen.add(cast3);
+		createAccountScreen.add(InitialUsername);
 		createAccountScreen.add(password);
-		createAccountScreen.add(cast4);
+		createAccountScreen.add(InitialPassword);
 		createAccountScreen.add(sq);
 		createAccountScreen.add(securityQuestions);
 		createAccountScreen.add(sa);
-		createAccountScreen.add(cast5);
+		createAccountScreen.add(SecurityAnswer);
 		createAccountScreen.add(hint);
-		createAccountScreen.add(cast6);
+		createAccountScreen.add(Hint);
+		createAccountScreen.add(ACode);
+		createAccountScreen.add(aCode);
 		
-		
-		createAccountScreen.add(cab);
-		createAccountScreen.add(dt);
-		cab.addActionListener(this);
-		dt.addActionListener(this);
+		heading.setBounds(450,50, 600, 110);
+		fName.setBounds(325,200,275,75);
+		FirstName.setBounds(575, 225, 360, 45);
+		lName.setBounds(325, 250, 275, 75);
+		LastName.setBounds(575, 275, 360, 45);
+		uName.setBounds(325,320, 275, 45);
+		InitialUsername.setBounds(575,325,360, 45);
+		password.setBounds(325,370, 275, 45);
+		InitialPassword.setBounds(575,375,360, 45);
+		sq.setBounds(325,420, 350, 45);
+		securityQuestions.setBounds(625,425, 360, 45);
+		sa.setBounds(325,470, 350, 45);
+		SecurityAnswer.setBounds(575,475, 360, 45);
+		hint.setBounds(325,520, 275, 45);
+		Hint.setBounds(575,525, 360, 45);
+		ACode.setBounds(325,570, 450, 45);
+		aCode.setBounds(575,575, 360, 45);
+		CreateAccount.setBounds(325,650, 175, 75);
+		DisplayTable.setBounds(575,650, 175, 75);
 
-		//b1.addActionListener(this);
+		
+		createAccountScreen.add(CreateAccount);
+		createAccountScreen.add(DisplayTable);
+		CreateAccount.addActionListener(this);
+		DisplayTable.addActionListener(this);
+
+		//HintButton.addActionListener(this);
 		
 	/**************************************************************************************************************************/
 		//Forgot Password Screen
@@ -231,13 +306,13 @@ public class LogIn implements ActionListener{
 		
 		JLabel fpsq = new JLabel((String)securityQuestions.getSelectedItem());
 		JLabel fpsa = new JLabel("Answer: ");
-		sat = new JTextField("", 50);
+		ResetAnswer = new JTextField("", 50);
 
 		JButton fpb = new JButton("Enter");
 		
 		forgotPasswordScreen.add(fpsq);
 		forgotPasswordScreen.add(fpsa);
-		forgotPasswordScreen.add(sat);
+		forgotPasswordScreen.add(ResetAnswer);
 		forgotPasswordScreen.add(fpb);
 
 		fpb.addActionListener(this);
@@ -249,17 +324,17 @@ public class LogIn implements ActionListener{
 		passwordRecoveryScreen.setSize(500, 500);
 		passwordRecoveryScreen.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
-		JLabel np = new JLabel("Enter New Password:");
-		JLabel rnp = new JLabel("Re-enter New Password: ");
-		npt = new JTextField("", 50);
-		rnpt = new JTextField("", 50);
+		JLabel NewPassword = new JLabel("Enter New Password:");
+		JLabel rNewPassword = new JLabel("Re-enter New Password: ");
+		NewPasswordText = new JTextField("", 50);
+		rNewPasswordTextText = new JTextField("", 50);
 		
 		JButton prb = new JButton("Enter");
 		
-		passwordRecoveryScreen.add(np);
-		passwordRecoveryScreen.add(npt);
-		passwordRecoveryScreen.add(rnp);
-		passwordRecoveryScreen.add(rnpt);
+		passwordRecoveryScreen.add(NewPassword);
+		passwordRecoveryScreen.add(NewPasswordText);
+		passwordRecoveryScreen.add(rNewPassword);
+		passwordRecoveryScreen.add(rNewPasswordTextText);
 
 		prb.addActionListener(this);
 		
@@ -292,28 +367,168 @@ public class LogIn implements ActionListener{
 		adminLogInScreen.add(aub);
 
 		aub.addActionListener(this);
-	}
 	
 	/**************************************************************************************************************************/
+		//Server Screen
+		
+		ServerScreen = new JFrame("Makeshift Servver");
+		ServerScreen.setLayout(null);
+		ServerScreen.setSize(screen);
+		ServerScreen.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		SOS = new JButton("SOS");
+		CreateMusical = new JButton("Create Musical");
+		
+		ServerScreen.add(SOS);
+		ServerScreen.add(CreateMusical);
+		
+		CreateMusical.setBounds(325,400, 175, 75);
+		SOS.setBounds(575,400, 175, 75);
+		
+		CreateMusical.addActionListener(this);
+		SOS.addActionListener(this);
+		
+		/////////////////////////////////////////
+		
+		ErrorMessage = new JFrame("Makeshift Servver");
+		ErrorMessage.setLayout(null);
+		ErrorMessage.setSize(screen);
+		ErrorMessage.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		
+		JLabel brokenMic = new JLabel("Please enter the number of the broken mic.");
+		JLabel Error = new JLabel("Please state what error occured.");
+		
+		
+
+		
+		
+	/**************************************************************************************************************************/
 	//Make Buttons Work Time!!!
-	
+	ShowPassword.addActionListener(new ActionListener() {
 	public void actionPerformed(ActionEvent ae) {
-		if(ae.getActionCommand().equals("Create Account")) {
+		
+	        JCheckBox cb = (JCheckBox) ae.getSource();
+	        if (cb.isSelected()) {
+	        	 PasswordText.setEchoChar((char)0);
+	         
+	        } else {
+	            PasswordText.setEchoChar('*');
+	        }
+		
+		 /*JCheckBox cbLog = (JCheckBox) ae.getSource();
+	        if (cbLog.isSelected()) {
+	        	this.password.setEchoChar((char)0);
+	         
+	        } else {
+	            this.password.setEchoChar('*');
+	        }*/
+
+		
+	}
+});
+}
+	public void actionPerformed(ActionEvent e) {
+		
+		if(e.getActionCommand().equals("Log In")) {
+			for (User user : AllUsers)
+	        {
+	            if (user.getuName().equals(username.getText()))
+	            {
+	                if (user.getPassword().equals(PasswordText.getText()))
+	                {
+	                    LogInUser = user;
+
+	                    // when a user is found, "break" stops iterating through the list
+	                    break;
+	                }
+	            }
+	        }
+			 if (LogInUser != null)
+		        {
+				 logInScreen.dispose();
+		        	ServerScreen.setVisible(true);
+		        }
+		        else
+		        {
+		        	JOptionPane.showMessageDialog(logInScreen,"Invalid username/password combination");
+		        }
+		}
+		if(e.getActionCommand().equals("Admin Log In")) {
+	            for (User aUser : AdminUser)
+		        {
+		            if (aUser.getuName().equals(username.getText()))
+		            {
+		                if (aUser.getPassword().equals(PasswordText.getText()))
+		                {
+		                    LogInUser = aUser;
+
+		                    // when a user is found, "break" stops iterating through the list
+		                    break;
+		                }
+		            }
+	        }
+
+	        // if loggedInUser was changed from null, it was successful
+	            if (LogInUser != null)
+		        {
+	            	logInScreen.dispose();
+		        	ServerScreen.setVisible(true);
+		        }
+		        else
+		        {
+		        	JOptionPane.showMessageDialog(logInScreen,"Invalid username/password combination");
+		        }
+	    }
+		
+		if(e.getActionCommand().equals("Create Account")) {
 			createAccountScreen.setVisible(true);
 			logInScreen.dispose();
 		}
-		if(ae.getActionCommand().equals("Create User")) {
-			if(cast1.getText().length() == 0 || cast2.getText().length() == 0||cast3.getText().length() == 0 ||cast4.getText()
-					.length() == 0 ||cast5.getText().length() == 0 ||cast6.getText().length() == 0 ) {
-				JOptionPane.showMessageDialog(null, "Please enter values in all fields");
+		if(e.getActionCommand().equals("Create User")) {
+			if(FirstName.getText().length() == 0 || LastName.getText().length() == 0||InitialUsername.getText().length() == 0 ||InitialPassword.getText()
+					.length() == 0 ||SecurityAnswer.getText().length() == 0 ||Hint.getText().length() == 0 ) {
+				JOptionPane.showMessageDialog(createAccountScreen, 
+						  "Please answer all required fields.", "Failure", 
+						  JOptionPane.ERROR_MESSAGE);
 			}
-					
-				/*	u = new User(cast1.getText(), cast2.getText(),cast3.getText(), cast4.getText(), (String) securityQuestions
-							.getSelectedItem(), cast5.getText(), cast6.getText());
+			else if(FirstName.getText().length() > 0 && LastName.getText().length() > 0&&
+					InitialUsername.getText().length() > 0 &&InitialPassword.getText()
+					.length() > 0 &&SecurityAnswer.getText().length() > 0 &&
+					Hint.getText().length() > 0 && aCode.getText().length() == 0) {
+			AllUsers.add(new User(FirstName.getText(), LastName.getText(),InitialUsername.
+				   getText(), InitialPassword.getText(), (String) securityQuestions
+				  .getSelectedItem(), SecurityAnswer.getText(), Hint.getText()));
+			createAccountScreen.dispose();
+			logInScreen.setVisible(true);
+			JOptionPane.showMessageDialog(createAccountScreen,"User "
+					+ "successfuly created.");
+			}
+			else if(FirstName.getText().length() != 0 && LastName.getText().length() != 0&&
+					InitialUsername.getText().length() != 0 &&InitialPassword.getText()
+					.length() != 0 &&SecurityAnswer.getText().length() != 0 &&
+					Hint.getText().length() != 0 && aCode.getText().length() != 0) {
+				if(aCode.getText().equals(AdminCode)) {
+				AdminUser.add(new User(FirstName.getText(), LastName.getText(),InitialUsername.
+						   getText(), InitialPassword.getText(), (String) securityQuestions
+						  .getSelectedItem(), SecurityAnswer.getText(), Hint.getText()));
+					createAccountScreen.dispose();
+					logInScreen.setVisible(true);
+					JOptionPane.showMessageDialog(createAccountScreen,"Admin user "
+							+ "successfuly created.");
+				}
+				if(!(aCode.getText().equals(AdminCode))){
+					JOptionPane.showMessageDialog(createAccountScreen, 
+							  "Invalid admin code.", "Failure", 
+							  JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			
+				/*	u = new User(FirstName.getText(), LastName.getText(),InitialUsername.
+				   getText(), InitialPassword.getText(), (String) securityQuestions
+				  .getSelectedItem(), SecurityAnswer.getText(), Hint.getText());
 					try {
-						stmt.executeUpdate("Insert into USER_INFO values("+"'" + cast1.getText() + "',' "
-					+ cast2.getText() + "','" + cast3.getText() + "','"+ cast4.getText() + "','"+ (String) securityQuestions
-					.getSelectedItem() + "','" + cast5.getText() + "','"+ cast6.getText() +"')");
+						stmt.executeUpdate("Insert into USER_INFO values("+"'" + FirstName.getText() + "',' "
+					+ LastName.getText() + "','" + InitialUsername.getText() + "','"+ InitialPassword.getText() + "','"+ (String) securityQuestions
+					.getSelectedItem() + "','" + SecurityAnswer.getText() + "','"+ Hint.getText() +"')");
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
@@ -326,51 +541,70 @@ public class LogIn implements ActionListener{
 				*/
 				
 				username.setText("");
-				password.setText("");
+				PasswordText.setText("");
 			
-			cast1.setText("");
-			cast2.setText("");
-			cast3.setText("");
-			cast4.setText("");
-			cast5.setText("");
-			cast6.setText("");
+			FirstName.setText("");
+			LastName.setText("");
+			InitialUsername.setText("");
+			InitialPassword.setText("");
+			SecurityAnswer.setText("");
+			Hint.setText("");
+			aCode.setText("");
+		}
+		if(e.getActionCommand().equals("SOS")) {
+			
+			
 		}
 		
-		if(ae.getActionCommand().equals("Display Table")) {
+		if(e.getActionCommand().equals("Display Table")) {
 			frame2.setVisible(true);
 		}
-		if(ae.getActionCommand().equals("Forgot Password")) {
+		if(e.getActionCommand().equals("Forgot Password")) {
 			forgotPasswordScreen.setVisible(true);
-			
-			if(ae.getActionCommand().equals("Enter")) {
+		}
+		if(e.getActionCommand().equals("Enter")) {
+			//passwordRecoveryScreen.setVisible(true);
+			if(ResetAnswer.getText().equals(u.getsAnswer())){
 				passwordRecoveryScreen.setVisible(true);
-				if(sat.getText().equals(u.getsAnswer())){
-					passwordRecoveryScreen.setVisible(true);
-					if(npt.getText().equals(rnpt.getText())) {
-					u.setPassword(npt.getText());
-						JOptionPane.showMessageDialog(forgotPasswordScreen,"Password "
-								+ "successfuly reset.");
-					}
-					else{
-						JOptionPane.showMessageDialog(passwordRecoveryScreen,"Passwords do "
-								+ "not match.");
-					}
-					
+				if(NewPasswordText.getText().equals(rNewPasswordTextText.getText())) {
+				u.setPassword(NewPasswordText.getText());
+				JOptionPane.showMessageDialog(forgotPasswordScreen,"Password "
+							+ "successfuly reset.");
 				}
-			}
 				else{
-					JOptionPane.showMessageDialog(forgotPasswordScreen,"Incorrect answer,"
-							+ " try again.");
+					JOptionPane.showMessageDialog(passwordRecoveryScreen,"Passwords do "
+							+ "not match.");
 				}
+					
+			}
+		}
+			//else{
+					//JOptionPane.showMessageDialog(forgotPasswordScreen,"Incorrect answer,"
+						//	+ " try again.");
+				//}
 			
-		}
-		if(ae.getActionCommand().equals("Admin Log In")) {
-			adminLogInScreen.setVisible(true);
+		
+		//if(e.getActionCommand().equals("Admin Log In")) {
+		//	adminLogInScreen.setVisible(true);
 			
+	//	}
+		if(e.getActionCommand().equals("Hint")) {
+			for (User user : AllUsers)
+	        {
+	            if (user.getuName().equals(username.getText()))
+	            {
+	                if (user.getPassword().equals(PasswordText.getText()))
+	                {
+	                	JOptionPane.showMessageDialog(logInScreen,"Your hint is: " +
+	                			user.getHint());
+
+	                    // when a user is found, "break" stops iterating through the list
+	                    break;
+	                }
+	            }
 		}
-		if(ae.getActionCommand().equals("Hint")) {
-			JOptionPane.showMessageDialog(logInScreen,"Your hint is: " );
 		}
+		
 		
 	}
 	
@@ -413,7 +647,7 @@ public class LogIn implements ActionListener{
 		
 	}
 	*/
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
