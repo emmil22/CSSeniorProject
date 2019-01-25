@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
 
+
 import javax.swing.*;
 
 import Reference.CustomerOrder;
@@ -26,8 +27,10 @@ public class LogIn implements ActionListener {
 	private JTextField username;
 	private TextField PasswordText;
 	private User LogInUser;
+	private Error er;
 	private List<User> AllUsers;
 	private List<User> AdminUser;
+	Admin a;
 
 	
 	//Create Account Screen Variables
@@ -87,11 +90,15 @@ public class LogIn implements ActionListener {
 	Statement stmt;
 	private User u;
 	ArrayList<User> users = new ArrayList<User>();
+	private JFrame frame1;
 	private JFrame frame2;
 	private JScrollPane jscrlp;
 	private boolean tableCreated = false;
+	private boolean tableCreated1 = false;
 	private Object[][] obj;
+	private Object[][] obj1;
 	private JTable table;
+	private JTable table1;
 	String [] headings = {"First Name", "Last Name", "Username", "Password", 
 			"Security Question","Security Answer", "Hint"};
 	
@@ -103,7 +110,7 @@ public class LogIn implements ActionListener {
 	LogIn() {
 		
 		//Create connection with database
-		/*try {
+		try {
 			dbc = DBConnectionManagerSingleton.getInstance();
 		} catch (Exception e) {
 		}
@@ -131,10 +138,10 @@ public class LogIn implements ActionListener {
 					users.add(u);
 					System.out.println(fn);
 				}
-			}catch (SQLException e) {
+			}catch (SQLException ex) {
 	
-				e.printStackTrace();
-			}*/
+				ex.printStackTrace();
+			}
 		
 		//Create LogIn Screen Frame
 		logInScreen = new JFrame("Log In");
@@ -149,6 +156,7 @@ public class LogIn implements ActionListener {
 		//Create List of Users to login
 		AllUsers = new ArrayList<>();
 		AdminUser = new ArrayList<>();
+		MusicalList = new ArrayList<>();
 		LogInUser = null;
 		
 		//Create and edit labels
@@ -216,11 +224,17 @@ public class LogIn implements ActionListener {
 		createAccountScreen.setSize(screen);
 		createAccountScreen.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
+		frame1 = new JFrame("User Data");
+		frame1.getContentPane().setLayout(new FlowLayout());
+		frame1.setSize(1000, 500);
+		frame1.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		updateTable();
+		
 		frame2 = new JFrame("User Data");
 		frame2.getContentPane().setLayout(new FlowLayout());
 		frame2.setSize(1000, 500);
 		frame2.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		//updateTable();
+		updateTable();
 		//createAcoountScreen.setLayout(new Layout());
 		//createAccountScreen.setBounds(0,0,0,0); 
 		JLabel heading = new JLabel("New User");
@@ -415,10 +429,10 @@ public class LogIn implements ActionListener {
 		ErrorMessage.add(confirmError);
 		
 		brokenMic.setBounds(50,200, 400,50 );
-		Error.setBounds(125,220, 400,50 );
+		Error.setBounds(125,300, 400,50 );
 		bm.setBounds(50,250, 400,50 );
-		err.setBounds(125,270, 400,50 );
-		confirmError.setBounds(50,350, 400,50 );
+		err.setBounds(125,350, 400,50 );
+		confirmError.setBounds(50,425, 400,50 );
 		
 		/////////////////////////////////////////
 		
@@ -450,13 +464,13 @@ public class LogIn implements ActionListener {
 		
 		
 		MName.setBounds(50,200, 400,50 );
-		mName.setBounds(50,220, 400,50 );
+		mName.setBounds(300,220, 400,50 );
 		Actor.setBounds(50,250, 400,50 );
-		actor.setBounds(50,270, 400,50 );
+		actor.setBounds(300,270, 400,50 );
 		Roles.setBounds(50,300, 400,50 );
-		role.setBounds(50,320, 400,50 );
+		role.setBounds(300,320, 400,50 );
 		Songsin.setBounds(50,350, 400,50 );
-		songsin.setBounds(50,370, 400,50 );
+		songsin.setBounds(300,370, 400,50 );
 		confirmMusical.setBounds(325,500, 100,50 );
 		
 		confirmMusical.addActionListener(this);
@@ -587,15 +601,15 @@ public class LogIn implements ActionListener {
 				}
 			}
 			
-				/*	u = new User(FirstName.getText(), LastName.getText(),InitialUsername.
+					u = new User(FirstName.getText(), LastName.getText(),InitialUsername.
 				   getText(), InitialPassword.getText(), (String) securityQuestions
 				  .getSelectedItem(), SecurityAnswer.getText(), Hint.getText());
 					try {
 						stmt.executeUpdate("Insert into USER_INFO values("+"'" + FirstName.getText() + "',' "
 					+ LastName.getText() + "','" + InitialUsername.getText() + "','"+ InitialPassword.getText() + "','"+ (String) securityQuestions
 					.getSelectedItem() + "','" + SecurityAnswer.getText() + "','"+ Hint.getText() +"')");
-					} catch (SQLException e) {
-						e.printStackTrace();
+					} catch (SQLException ex) {
+						ex.printStackTrace();
 					}
 				
 				
@@ -603,18 +617,9 @@ public class LogIn implements ActionListener {
 
 				this.users.add(u);
 				updateTable();
-				*/
 				
-				username.setText("");
-				PasswordText.setText("");
-			
-			FirstName.setText("");
-			LastName.setText("");
-			InitialUsername.setText("");
-			InitialPassword.setText("");
-			SecurityAnswer.setText("");
-			Hint.setText("");
-			aCode.setText("");
+				
+		
 		}
 		if(e.getActionCommand().equals("SOS")) {
 			ErrorMessage.setVisible(true);
@@ -622,7 +627,7 @@ public class LogIn implements ActionListener {
 		}
 		
 		if(e.getActionCommand().equals("Display Table")) {
-			frame2.setVisible(true);
+			frame1.setVisible(true);
 		}
 		if(e.getActionCommand().equals("Forgot Password")) {
 			forgotPasswordScreen.setVisible(true);
@@ -637,9 +642,7 @@ public class LogIn implements ActionListener {
 			else {
 			MusicalList.add(new Musical(mName.getText(), actor.getText(),role.
 				   getText(), songsin.getText()));
-	
-			JOptionPane.showMessageDialog(createAccountScreen,"Data "
-					+ "successfuly created.");
+			a.createMusical(MusicalList);
 			}
 			
 		}
@@ -691,17 +694,31 @@ public class LogIn implements ActionListener {
 		}
 		
 		if(e.getActionCommand().equals("Confirm Error")) {
+			er = new Error(FirstName.getText(), LastName.getText(),InitialUsername.
+					   getText(), InitialPassword.getText());
+						try {
+							stmt.executeUpdate("Insert into ERROR_LOG values("+"'" + mName.getText() + "',' "
+						+ actor.getText() + "','" + role.getText() + "','"+ songsin.getText() + "')");
+						} catch (SQLException ex) {
+							ex.printStackTrace();
+						}
+					
+					
+					
+
+					//this.e.add(er);
+					updateTable();
 			
 		}
 		
 		
 	}
 	
-	/*public void updateTable() {
+	public void updateTable() {
 		
 		
 		if (tableCreated) {
-			frame2.remove(jscrlp);
+			frame1.remove(jscrlp);
 		}
 	
 		tableCreated = true;
@@ -728,14 +745,14 @@ public class LogIn implements ActionListener {
 
 		table.setPreferredScrollableViewportSize(new Dimension(980, 500));
 		
-		frame2.add(jscrlp);
+		frame1.add(jscrlp);
 
-		if (frame2.isVisible()) {
-			frame2.setVisible(true);
+		if (frame1.isVisible()) {
+			frame1.setVisible(true);
 		}
 		
 	}
-	*/
+	
 	public static void main(String[] args) throws IOException {
 
 		SwingUtilities.invokeLater(new Runnable() {
