@@ -4,6 +4,7 @@ package IA;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -13,8 +14,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
-
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
 
 import Reference.CustomerOrder;
 
@@ -28,7 +31,8 @@ public class LogIn implements ActionListener {
 	private User LogInUser;
 	private List<User> AllUsers;
 	private List<User> AdminUser;
-
+	private List<Musical> MusicalList;
+	private ImageIcon ragtimeImage;
 	
 	//Create Account Screen Variables
 	private String AdminCode = "s738*!dp";
@@ -76,28 +80,31 @@ public class LogIn implements ActionListener {
 	private JTextField role;
 	private JTextField songsin;
 	private JButton confirmMusical;
-	//private JButton 
-	//private List<User> AllUsers;
-	private List<Musical> MusicalList;
-	
 
 	//Database Variables
 	DBConnectionManagerSingleton dbc;
 	Connection conn;
 	Statement stmt;
 	private User u;
+	private Error err;
 	ArrayList<User> users = new ArrayList<User>();
-	private JFrame frame2;
+	ArrayList<Error> errors = new ArrayList<Error>();
+	
+	private JFrame UserFrame;
 	private JScrollPane jscrlp;
-	private boolean tableCreated = false;
-	private Object[][] obj;
-	private JTable table;
-	String [] headings = {"First Name", "Last Name", "Username", "Password", 
+	private boolean userTableCreated = false;
+	private Object[][] userObj;
+	private JTable userTable;
+	String [] userHeadings = {"First Name", "Last Name", "Username", "Password", 
 			"Security Question","Security Answer", "Hint"};
 	
-	/*public LogIn(String text) {
-        super(text);
-    }*/
+	private JFrame errorFrame;
+	private boolean errorTableCreated = false;
+	private Object[][] errorObj;
+	private JTable errorTable;
+	String [] errorHeadings = {"Broken Mic", "Replaced Mic", "Error", "Time Logged"};
+	
+	
 	/*******************************************************************************************************************************/
 	//Log In Screen
 	LogIn() {
@@ -142,8 +149,8 @@ public class LogIn implements ActionListener {
 		logInScreen.setVisible(true);
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 		logInScreen.setSize(screen);
-		logInScreen.setBackground(Color.black);
-		logInScreen.setForeground(Color.black);
+		logInScreen.setBackground(Color.white);
+		logInScreen.setForeground(Color.white);
 		logInScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//Create List of Users to login
@@ -152,13 +159,14 @@ public class LogIn implements ActionListener {
 		LogInUser = null;
 		
 		//Create and edit labels
-		JLabel label1 = new JLabel("Username: ");
-		JLabel label2 = new JLabel("Password: ");
-		JLabel label3 = new JLabel("Ragtime");
-		label3.setFont(new Font("Times New Roman", Font.BOLD, 100));
-		label2.setFont(new Font("Times New Roman", Font.PLAIN, 40));
-		label1.setFont(new Font("Times New Roman", Font.PLAIN, 40));
-		label3.setForeground(Color.white);
+		JLabel usernameLabel = new JLabel("Username: ");
+		JLabel passwordLabel = new JLabel("Password: ");
+		JLabel label3 = new JLabel("Ragtime Tech");
+		JLabel label4 = new JLabel("Log In");
+		label3.setFont(new Font("Times New Roman", Font.BOLD, 75));
+		label4.setFont(new Font("Times New Roman", Font.BOLD, 75));
+		passwordLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
+		usernameLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
 		
 		//Create Textfields for input from user
 		username = new JTextField("", 30);
@@ -172,12 +180,19 @@ public class LogIn implements ActionListener {
 		JButton CreateAccountButton = new JButton("Create Account");
 		JButton AdminLogInButton = new JButton("Admin Log In");
 		JCheckBox ShowPassword = new JCheckBox("Show Password");
+		ragtimeImage = new ImageIcon("/Users/emily/eclipse-workspace/RAGTIME.png");
+		Image image = ragtimeImage.getImage(); // transform it 
+		Image newimg = image.getScaledInstance(575, 700,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+		ragtimeImage = new ImageIcon(newimg);  // transform it back
+		JLabel ragtimeLabel = new JLabel(ragtimeImage);
 		
 		//Add labels and textfields to the frame
+        logInScreen.add(ragtimeLabel);
 		logInScreen.add(label3);
-		logInScreen.add(label1);
+		logInScreen.add(label4);
+		logInScreen.add(usernameLabel);
 		logInScreen.add(username);
-		logInScreen.add(label2);
+		logInScreen.add(passwordLabel);
 		logInScreen.add(PasswordText);
 		logInScreen.add(LogInButton);
 		logInScreen.add(HintButton);
@@ -187,17 +202,19 @@ public class LogIn implements ActionListener {
 		logInScreen.add(ShowPassword);
 				
 		//Format frame
-		label1.setBounds(375,300,185,75);
-		username.setBounds(575, 325, 300, 45);
-		label2.setBounds(375, 350, 175, 75);
-		PasswordText.setBounds(575, 375, 300, 40);
-		label3.setBounds(450,50, 400, 110);
-		ShowPassword.setBounds(575,425,150, 30);
-		LogInButton.setBounds(375,500, 485, 45);
-		HintButton.setBounds(250,600, 175, 75);
-		fPassButton.setBounds(450,600, 175, 75);
-		CreateAccountButton.setBounds(650,600, 175, 75);
-		AdminLogInButton.setBounds(850,600, 175, 75);
+		ragtimeLabel.setBounds(0, 0, 575, 700);
+		usernameLabel.setBounds(675,300,100,50);
+		username.setBounds(770, 310, 400, 30);
+		passwordLabel.setBounds(675, 347, 90, 50);
+		PasswordText.setBounds(772, 360, 395, 24);
+		label4.setBounds(810, 125,400,110);
+		label3.setBounds(700,50, 700, 110);
+		ShowPassword.setBounds(770,400,150, 30);
+		LogInButton.setBounds(675,450, 485, 45);
+		HintButton.setBounds(595,600, 150, 70);
+		fPassButton.setBounds(770,600, 150, 70);
+		CreateAccountButton.setBounds(945,600, 150, 70);
+		AdminLogInButton.setBounds(1120,600, 150, 70);
 		
 		//Evoke action listener
 		LogInButton.addActionListener(this);
@@ -216,10 +233,10 @@ public class LogIn implements ActionListener {
 		createAccountScreen.setSize(screen);
 		createAccountScreen.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
-		frame2 = new JFrame("User Data");
-		frame2.getContentPane().setLayout(new FlowLayout());
-		frame2.setSize(1000, 500);
-		frame2.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		UserFrame = new JFrame("User Data");
+		UserFrame.getContentPane().setLayout(new FlowLayout());
+		UserFrame.setSize(1000, 500);
+		UserFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		//updateTable();
 		//createAcoountScreen.setLayout(new Layout());
 		//createAccountScreen.setBounds(0,0,0,0); 
@@ -257,7 +274,7 @@ public class LogIn implements ActionListener {
 		aCode = new JTextField("", 50);
 		CreateAccount = new JButton("Create User");
 		DisplayTable = new JButton("Display Table");
-	   // SecurityAnswer.setEchoChar('*');
+	  
 		createAccountScreen.add(heading);
 		createAccountScreen.add(fName);
 		createAccountScreen.add(FirstName);
@@ -405,19 +422,19 @@ public class LogIn implements ActionListener {
 		JLabel brokenMic = new JLabel("Please enter the number of the broken mic.");
 		JLabel Error = new JLabel("Please state what error occured.");
 		JTextField bm = new JTextField("",50);
-		JTextField err = new JTextField("",50);
+		JTextField errorText = new JTextField("",50);
 		confirmError = new JButton("Confirm Error");
 		
 		ErrorMessage.add(brokenMic);
 		ErrorMessage.add(Error);
 		ErrorMessage.add(bm);
-		ErrorMessage.add(err);
+		ErrorMessage.add(errorText);
 		ErrorMessage.add(confirmError);
 		
 		brokenMic.setBounds(50,200, 400,50 );
 		Error.setBounds(125,220, 400,50 );
 		bm.setBounds(50,250, 400,50 );
-		err.setBounds(125,270, 400,50 );
+		errorText.setBounds(125,270, 400,50 );
 		confirmError.setBounds(50,350, 400,50 );
 		
 		/////////////////////////////////////////
@@ -595,14 +612,14 @@ public class LogIn implements ActionListener {
 					+ LastName.getText() + "','" + InitialUsername.getText() + "','"+ InitialPassword.getText() + "','"+ (String) securityQuestions
 					.getSelectedItem() + "','" + SecurityAnswer.getText() + "','"+ Hint.getText() +"')");
 					} catch (SQLException e) {
-						e.printStackTrace();
+						ex.printStackTrace();
 					}
 				
 				
 				
 
 				this.users.add(u);
-				updateTable();
+				updateUserTable();
 				*/
 				
 				username.setText("");
@@ -622,7 +639,7 @@ public class LogIn implements ActionListener {
 		}
 		
 		if(e.getActionCommand().equals("Display Table")) {
-			frame2.setVisible(true);
+			UserFrame.setVisible(true);
 		}
 		if(e.getActionCommand().equals("Forgot Password")) {
 			forgotPasswordScreen.setVisible(true);
@@ -692,50 +709,97 @@ public class LogIn implements ActionListener {
 		
 		if(e.getActionCommand().equals("Confirm Error")) {
 			
+			err = new Error(FirstName.getText(), LastName.getText(),InitialUsername.
+					   getText(), InitialPassword.getText());
+						try {
+							stmt.executeUpdate("Insert into USER_INFO values("+"'" + FirstName.getText() + "',' "
+						+ LastName.getText() + "','" + InitialUsername.getText() + "','"+ InitialPassword.getText() + "','"+ (String) securityQuestions
+						.getSelectedItem() + "','" + SecurityAnswer.getText() + "','"+ Hint.getText() +"')");
+						} catch (SQLException ex) {
+							ex.printStackTrace();
+						}
+			
 		}
 		
 		
 	}
 	
-	/*public void updateTable() {
-		
-		
-		if (tableCreated) {
-			frame2.remove(jscrlp);
+	public void updateUserTable() {
+			
+			
+		if (userTableCreated) {
+			UserFrame.remove(jscrlp);
 		}
-	
-		tableCreated = true;
 		
-		 obj = new Object[users.size()][20];
+		userTableCreated = true;
+			
+		userObj = new Object[users.size()][20];
 		for(int i = 0; i < users.size(); i++) {
-			obj[i][0] = this.users.get(i).getfName();
-			obj[i][1] = this.users.get(i).getlName();
-			obj[i][2] = this.users.get(i).getuName();
-			obj[i][3] = this.users.get(i).getPassword();
-			obj[i][4] = this.users.get(i).getsQuestion();
-			obj[i][5] = this.users.get(i).getsAnswer();
-			obj[i][6] = this.users.get(i).getHint();
+			userObj[i][0] = this.users.get(i).getfName();
+			userObj[i][1] = this.users.get(i).getlName();
+			userObj[i][2] = this.users.get(i).getuName();
+			userObj[i][3] = this.users.get(i).getPassword();
+			userObj[i][4] = this.users.get(i).getsQuestion();
+			userObj[i][5] = this.users.get(i).getsAnswer();
+			userObj[i][6] = this.users.get(i).getHint();
 		}
-		
-		table = new JTable(obj, headings)
+			
+		userTable = new JTable(userObj, userHeadings)
 		{
 		    public boolean isCellEditable(int row, int column) {                
 		        return false;               
 		    };
 		};
-		jscrlp = new JScrollPane(table);
-		table.getTableHeader().setReorderingAllowed(false);
+		jscrlp = new JScrollPane(userTable);
+		userTable.getTableHeader().setReorderingAllowed(false);
+	
+		userTable.setPreferredScrollableViewportSize(new Dimension(980, 500));
+			
+		UserFrame.add(jscrlp);
 
-		table.setPreferredScrollableViewportSize(new Dimension(980, 500));
+		if (UserFrame.isVisible()) {
+			UserFrame.setVisible(true);
+		}
+			
+	}
+	
+	public void updateErrorTable() {
 		
-		frame2.add(jscrlp);
-
-		if (frame2.isVisible()) {
-			frame2.setVisible(true);
+		
+		if (errorTableCreated) {
+			errorFrame.remove(jscrlp);
 		}
 		
+		errorTableCreated = true;
+			
+		errorObj = new Object[errors.size()][4];
+		for(int i = 0; i < errors.size(); i++) {
+			errorObj[i][0] = this.errors.get(i).getbMic();
+			errorObj[i][1] = this.errors.get(i).getrMic();
+			errorObj[i][2] = this.errors.get(i).getError();
+			errorObj[i][3] = this.errors.get(i).getTime();
+
+		}
+			
+		errorTable = new JTable(userObj, userHeadings)
+		{
+		    public boolean isCellEditable(int row, int column) {                
+		        return false;               
+		    };
+		};
+		jscrlp = new JScrollPane(errorTable);
+		errorTable.getTableHeader().setReorderingAllowed(false);
+	
+		errorTable.setPreferredScrollableViewportSize(new Dimension(980, 500));
+			
+		errorFrame.add(jscrlp);
+
+		if (errorFrame.isVisible()) {
+			errorFrame.setVisible(true);
+		}
+			
 	}
-	*/
+	
 	public static void main(String[] args) throws IOException {
 
 		SwingUtilities.invokeLater(new Runnable() {
