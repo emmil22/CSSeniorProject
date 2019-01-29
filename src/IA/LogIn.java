@@ -4,22 +4,22 @@ package IA;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
+//import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
-import java.sql.ResultSet;
+//import java.sql.ResultSet;
 import java.sql.SQLException;
-import javax.swing.AbstractAction;
+//import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
-import javax.imageio.ImageIO;
+//import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.io.File;
-import java.io.IOException;
+//import java.io.File;
+//import java.io.IOException;
 
-import Reference.CustomerOrder;
+//import Reference.CustomerOrder;
 
 
 public class LogIn implements ActionListener {
@@ -263,7 +263,7 @@ public class LogIn implements ActionListener {
 		
 		securityQuestions = new JComboBox<String>(questions);
 		securityQuestions.addActionListener(this);
-		securityQuestions.setEditable(true);
+		//securityQuestions.setEditable(true);
 		
 		FirstName = new JTextField("", 50);
 		LastName = new JTextField("", 50);
@@ -503,28 +503,37 @@ public class LogIn implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		
 		if(e.getActionCommand().equals("Log In")) {
-			for (User user : AllUsers)
-	        {
-	            if (user.getuName().equals(username.getText()))
-	            {
-	                if (user.getPassword().equals(PasswordText.getText()))
-	                {
+			
+			if(AllUsers.size() != 0) {
+			for (User user : AllUsers) {
+				
+	            if (user.getuName().equals(username.getText())) {
+	                if (user.getPassword().equals(PasswordText.getText())) {
 	                    LogInUser = user;
+	                }
+	                    if (LogInUser != null) {
+	    				 logInScreen.dispose();
+	    		        	ServerScreen.setVisible(true);
+	    		        }
+	    		        else
+	    		        {
+	    		        	JOptionPane.showMessageDialog(logInScreen,"Invalid username/password combination");
+	    		        }
 
 	                    // when a user is found, "break" stops iterating through the list
 	                    break;
-	                }
+	                
+	            }
+	            else {
+	            	JOptionPane.showMessageDialog(logInScreen,"User does not exist");
+	            	
 	            }
 	        }
-			 if (LogInUser != null)
-		        {
-				 logInScreen.dispose();
-		        	ServerScreen.setVisible(true);
-		        }
-		        else
-		        {
-		        	JOptionPane.showMessageDialog(logInScreen,"Invalid username/password combination");
-		        }
+			}
+			else {
+				JOptionPane.showMessageDialog(logInScreen,"No user accounts have been created");
+			}
+			
 		}
 		if(e.getActionCommand().equals("Admin Log In")) {
 	            for (User aUser : AdminUser)
@@ -565,6 +574,7 @@ public class LogIn implements ActionListener {
 			logInScreen.dispose();
 		}
 		if(e.getActionCommand().equals("Create User")) {
+			if(AllUsers.size() == 0) {
 			if(FirstName.getText().length() == 0 || LastName.getText().length() == 0||InitialUsername.getText().length() == 0 ||InitialPassword.getText()
 					.length() == 0 ||SecurityAnswer.getText().length() == 0 ||Hint.getText().length() == 0 ) {
 				JOptionPane.showMessageDialog(createAccountScreen, 
@@ -575,6 +585,14 @@ public class LogIn implements ActionListener {
 					InitialUsername.getText().length() > 0 &&InitialPassword.getText()
 					.length() > 0 &&SecurityAnswer.getText().length() > 0 &&
 					Hint.getText().length() > 0 && aCode.getText().length() == 0) {
+				if(InitialPassword.getText().length()>30||InitialUsername.getText().length()>30||
+						FirstName.getText().length()>30||LastName.getText()
+						.length()>30||SecurityAnswer.getText().length()>30||Hint
+						.getText().length() > 30) {
+					JOptionPane.showMessageDialog(createAccountScreen,"Please make sure the"
+							+ " amount of characters in each field is less than 30.");
+				}
+				else {
 			AllUsers.add(new User(FirstName.getText(), LastName.getText(),InitialUsername.
 				   getText(), InitialPassword.getText(), (String) securityQuestions
 				  .getSelectedItem(), SecurityAnswer.getText(), Hint.getText()));
@@ -582,6 +600,7 @@ public class LogIn implements ActionListener {
 			logInScreen.setVisible(true);
 			JOptionPane.showMessageDialog(createAccountScreen,"User "
 					+ "successfuly created.");
+				}
 			}
 			
 			else if(FirstName.getText().length() > 0 && LastName.getText().length() > 0 &&
@@ -589,6 +608,22 @@ public class LogIn implements ActionListener {
 					.length() > 0 &&SecurityAnswer.getText().length() > 0 &&
 					Hint.getText().length() > 0 && aCode.getText().length() > 0) {
 				if(aCode.getText().equals(AdminCode)) {
+					if(InitialPassword.getText().length()>30||InitialUsername.getText().length()>30||
+							FirstName.getText().length()>30||LastName.getText()
+							.length()>30||SecurityAnswer.getText().length()>30||Hint
+							.getText().length() > 30) {
+						JOptionPane.showMessageDialog(createAccountScreen,"Please make sure the"
+								+ " amount of characters in each field is less than 30.");
+					}
+					else {
+						if(InitialPassword.getText().length()>30||InitialUsername.getText().length()>30||
+								FirstName.getText().length()>30||LastName.getText()
+								.length()>30||SecurityAnswer.getText().length()>30||Hint
+								.getText().length() > 30) {
+							JOptionPane.showMessageDialog(createAccountScreen,"Please make sure the"
+									+ " amount of characters in each field is less than 30.");
+						}
+						else {
 				AdminUser.add(new User(FirstName.getText(), LastName.getText(),InitialUsername.
 						   getText(), InitialPassword.getText(), (String) securityQuestions
 						  .getSelectedItem(), SecurityAnswer.getText(), Hint.getText()));
@@ -596,7 +631,9 @@ public class LogIn implements ActionListener {
 					logInScreen.setVisible(true);
 					JOptionPane.showMessageDialog(createAccountScreen,"Admin user "
 							+ "successfuly created.");
+						}
 				}
+			}
 				else{
 					JOptionPane.showMessageDialog(createAccountScreen, 
 							  "Invalid admin code.", "Failure", 
@@ -632,6 +669,97 @@ public class LogIn implements ActionListener {
 			SecurityAnswer.setText("");
 			Hint.setText("");
 			aCode.setText("");
+			}
+			
+			else {
+				for(User u: AllUsers) {
+					if(u.getuName().equals(InitialUsername.getText())) {
+						JOptionPane.showMessageDialog(createAccountScreen, 
+								  "Username already exists. Choose a new username.");
+						
+						username.setText("");
+						PasswordText.setText("");
+						FirstName.setText("");
+						LastName.setText("");
+						InitialUsername.setText("");
+						InitialPassword.setText("");
+						SecurityAnswer.setText("");
+						Hint.setText("");
+						aCode.setText("");
+						
+					}
+					else {
+						if(FirstName.getText().length() == 0 || LastName.getText().length() == 0||InitialUsername.getText().length() == 0 ||InitialPassword.getText()
+								.length() == 0 ||SecurityAnswer.getText().length() == 0 ||Hint.getText().length() == 0 ) {
+							JOptionPane.showMessageDialog(createAccountScreen, 
+									  "Please answer all required fields.", "Failure", 
+									  JOptionPane.ERROR_MESSAGE);
+						}
+						else if(FirstName.getText().length() > 0 && LastName.getText().length() > 0&&
+								InitialUsername.getText().length() > 0 &&InitialPassword.getText()
+								.length() > 0 &&SecurityAnswer.getText().length() > 0 &&
+								Hint.getText().length() > 0 && aCode.getText().length() == 0) {
+						AllUsers.add(new User(FirstName.getText(), LastName.getText(),InitialUsername.
+							   getText(), InitialPassword.getText(), (String) securityQuestions
+							  .getSelectedItem(), SecurityAnswer.getText(), Hint.getText()));
+						createAccountScreen.dispose();
+						logInScreen.setVisible(true);
+						JOptionPane.showMessageDialog(createAccountScreen,"User "
+								+ "successfuly created.");
+						}
+						
+						else if(FirstName.getText().length() > 0 && LastName.getText().length() > 0 &&
+								InitialUsername.getText().length() > 0 &&InitialPassword.getText()
+								.length() > 0 &&SecurityAnswer.getText().length() > 0 &&
+								Hint.getText().length() > 0 && aCode.getText().length() > 0) {
+							if(aCode.getText().equals(AdminCode)) {
+							AdminUser.add(new User(FirstName.getText(), LastName.getText(),InitialUsername.
+									   getText(), InitialPassword.getText(), (String) securityQuestions
+									  .getSelectedItem(), SecurityAnswer.getText(), Hint.getText()));
+								createAccountScreen.dispose();
+								logInScreen.setVisible(true);
+								JOptionPane.showMessageDialog(createAccountScreen,"Admin user "
+										+ "successfuly created.");
+							}
+							else{
+								JOptionPane.showMessageDialog(createAccountScreen, 
+										  "Invalid admin code.", "Failure", 
+										  JOptionPane.ERROR_MESSAGE);
+							}
+						}
+						
+							/*	u = new User(FirstName.getText(), LastName.getText(),InitialUsername.
+							   getText(), InitialPassword.getText(), (String) securityQuestions
+							  .getSelectedItem(), SecurityAnswer.getText(), Hint.getText());
+								try {
+									stmt.executeUpdate("Insert into USER_INFO values("+"'" + FirstName.getText() + "',' "
+								+ LastName.getText() + "','" + InitialUsername.getText() + "','"+ InitialPassword.getText() + "','"+ (String) securityQuestions
+								.getSelectedItem() + "','" + SecurityAnswer.getText() + "','"+ Hint.getText() +"')");
+								} catch (SQLException e) {
+									ex.printStackTrace();
+								}
+							
+							
+							
+
+							this.users.add(u);
+							updateUserTable();
+							*/
+							
+						username.setText("");
+						PasswordText.setText("");
+						FirstName.setText("");
+						LastName.setText("");
+						InitialUsername.setText("");
+						InitialPassword.setText("");
+						SecurityAnswer.setText("");
+						Hint.setText("");
+						aCode.setText("");
+						
+					}
+					
+				}
+			}
 		}
 		if(e.getActionCommand().equals("SOS")) {
 			ErrorMessage.setVisible(true);

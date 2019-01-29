@@ -41,7 +41,7 @@ public class UserDatabase {
 	
 	public  void createDBTable() throws Exception {
 		String TableString = "Create table USER_INFO (FIRST_NAME varchar (30), LAST_NAME "
-				+ "varchar (35), USERNAME varchar (30) primary key, PASSWORD varchar (30), "
+				+ "varchar (30), USERNAME varchar (30) primary key, PASSWORD varchar (30), "
 				+ "SECURITY_QUESTION varchar (100), SECURITY_ANSWER varchar(30), HINT varchar(30))";
 		 stmt.executeUpdate(TableString);
 	}

@@ -40,7 +40,7 @@ public class MusicalDatabase {
 	
 	public  void createDBTable() throws Exception {
 		String TableString = "Create table MUSICAL_INFO(MUSICAL_NAME varchar (30),"
-				+ " ACTOR varchar (35) primary key, ROLES varchar (30), SONGS_IN varchar (500))";
+				+ " ACTOR varchar (30) primary key, ROLES varchar (30), SONGS_IN varchar (500))";
 				
 		 stmt.executeUpdate(TableString);
 	}
