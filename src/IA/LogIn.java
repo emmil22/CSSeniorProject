@@ -240,16 +240,24 @@ public class LogIn implements ActionListener {
 		//updateTable();
 		//createAcoountScreen.setLayout(new Layout());
 		//createAccountScreen.setBounds(0,0,0,0); 
+		
+		
+		JTextArea star = new JTextArea("*");
+		star.setForeground(Color.RED);
 		JLabel heading = new JLabel("New User");
+		JLabel rFields = new JLabel("required fields");
+		rFields.setForeground(Color.RED);
 		heading.setForeground(Color.PINK);
-		JLabel fName = new JLabel("First Name: ");
-		JLabel lName = new JLabel("Last Name: ");
-		JLabel uName = new JLabel("Username: ");
-		JLabel password = new JLabel("Password: ");
-		JLabel sq = new JLabel("Security Question: ");
-		JLabel sa = new JLabel("Security Answer: ");
-		JLabel hint = new JLabel("Hint: ");
-		JLabel ACode = new JLabel("Admin Code(Optional): ");
+		JLabel fName = new JLabel("First Name" + star +" : ");
+		JLabel lName = new JLabel("Last Name"  + star.getText() +" : ");
+		JLabel uName = new JLabel("Username"  + star.getText() +" : ");
+		JLabel password = new JLabel("Password"  + star.getText() +" : ");
+		JLabel sq = new JLabel("Security Question"  + star.getText() +" : ");
+		JLabel sa = new JLabel("Security Answer"  + star.getText() +" : ");
+		JLabel hint = new JLabel("Hint"  + star.getText() +" : ");
+		JLabel ACode = new JLabel("Admin Code");
+	
+		
 		
 		heading.setFont(new Font("Times New Roman", Font.BOLD, 110));
 		fName.setFont(new Font("Times New Roman", Font.PLAIN, 40));
@@ -260,6 +268,8 @@ public class LogIn implements ActionListener {
 		sa.setFont(new Font("Times New Roman", Font.PLAIN, 40));
 		hint.setFont(new Font("Times New Roman", Font.PLAIN, 40));
 		ACode.setFont(new Font("Times New Roman", Font.PLAIN, 40));
+		
+		
 		
 		securityQuestions = new JComboBox<String>(questions);
 		securityQuestions.addActionListener(this);
@@ -275,6 +285,8 @@ public class LogIn implements ActionListener {
 		CreateAccount = new JButton("Create User");
 		DisplayTable = new JButton("Display Table");
 	  
+		createAccountScreen.add(star);
+		createAccountScreen.add(rFields);
 		createAccountScreen.add(heading);
 		createAccountScreen.add(fName);
 		createAccountScreen.add(FirstName);
@@ -310,6 +322,8 @@ public class LogIn implements ActionListener {
 		Hint.setBounds(575,525, 360, 45);
 		ACode.setBounds(325,570, 450, 45);
 		aCode.setBounds(575,575, 360, 45);
+		star.setBounds(575,600, 20, 20);
+		rFields.setBounds(600,600, 100, 45);
 		CreateAccount.setBounds(325,650, 175, 75);
 		DisplayTable.setBounds(575,650, 175, 75);
 
