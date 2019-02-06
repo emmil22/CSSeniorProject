@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.AbstractAction;
@@ -86,8 +88,8 @@ public class LogIn implements ActionListener {
 
 	//Database Variables
 	DBConnectionManagerSingleton dbc;
-	Connection conn;
-	Statement stmt;
+	static Connection conn;
+	static Statement statement;
 	private User u;
 	ArrayList<User> users = new ArrayList<User>();
 	private JFrame frame1;
@@ -110,19 +112,19 @@ public class LogIn implements ActionListener {
 	LogIn() {
 		
 		//Create connection with database
-		try {
+	/*	try {
 			dbc = DBConnectionManagerSingleton.getInstance();
 		} catch (Exception e) {
 		}
 		
 		
 		conn = dbc.getConnection();
-		stmt = dbc.getStatement();
+		statement = dbc.getStatement();
 			
 			String viewRec = "SELECT * from USER_INFO";
 			ResultSet rs;
 			try {
-				rs = stmt.executeQuery(viewRec);
+				rs = statement.executeQuery(viewRec);
 			
 			
 
@@ -142,7 +144,7 @@ public class LogIn implements ActionListener {
 	
 				ex.printStackTrace();
 			}
-		
+		*/
 		//Create LogIn Screen Frame
 		logInScreen = new JFrame("Log In");
 		logInScreen.setLayout(null);
@@ -605,7 +607,7 @@ public class LogIn implements ActionListener {
 				   getText(), InitialPassword.getText(), (String) securityQuestions
 				  .getSelectedItem(), SecurityAnswer.getText(), Hint.getText());
 					try {
-						stmt.executeUpdate("Insert into USER_INFO values("+"'" + FirstName.getText() + "',' "
+						statement.executeUpdate("Insert into USER_INFO values("+"'" + FirstName.getText() + "',' "
 					+ LastName.getText() + "','" + InitialUsername.getText() + "','"+ InitialPassword.getText() + "','"+ (String) securityQuestions
 					.getSelectedItem() + "','" + SecurityAnswer.getText() + "','"+ Hint.getText() +"')");
 					} catch (SQLException ex) {
@@ -697,7 +699,7 @@ public class LogIn implements ActionListener {
 			er = new Error(FirstName.getText(), LastName.getText(),InitialUsername.
 					   getText(), InitialPassword.getText());
 						try {
-							stmt.executeUpdate("Insert into ERROR_LOG values("+"'" + mName.getText() + "',' "
+							statement.executeUpdate("Insert into ERROR_LOG values("+"'" + mName.getText() + "',' "
 						+ actor.getText() + "','" + role.getText() + "','"+ songsin.getText() + "')");
 						} catch (SQLException ex) {
 							ex.printStackTrace();
@@ -754,6 +756,69 @@ public class LogIn implements ActionListener {
 	}
 	
 	public static void main(String[] args) throws IOException {
+		
+		   // Construct JFrame for entire program
+        JFrame jfm = new JFrame("Literature Application");
+
+        // EDIT APPLICATION JFRAME
+        jfm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jfm.setBackground(Color.BLACK);
+        jfm.setForeground(Color.BLACK);
+        jfm.setPreferredSize(new Dimension(1500, 1000));
+
+        // Construct Intro GUI
+       // introScreen g = new introScreen(jfm);
+
+        try {
+
+                String dbURL = "jdbc:sqlserver://localhost\\sqlexpress;";
+                String user = "sa";
+                String pass = "Suncoast$1";
+
+          
+                conn = DriverManager.getConnection(dbURL, user, pass);
+                if (conn != null) {
+                        DatabaseMetaData dm = conn.getMetaData();
+                        System.out.println("Driver name: " + dm.getDriverName());
+                        System.out.println("Driver version: " + dm.getDriverVersion());
+                        System.out.println("Product name: " + dm.getDatabaseProductName());
+                        System.out.println("Product version: " + dm.getDatabaseProductVersion());
+                }
+
+        }
+
+        catch (SQLException ex) {
+
+                System.out.println(ex);
+
+        }
+
+        try {
+
+                statement = conn.createStatement();
+
+                String update = "CREATE DATABASE SuncoastTheatre";
+                 statement.executeUpdate(update);
+
+                String user = "USE SuncoastTheatre";
+                statement.executeUpdate(user);
+
+                String updateTable = "Create table USER_INFO (FIRST_NAME varchar (30), LAST_NAME "
+        				+ "varchar (35), USERNAME varchar (30) primary key, PASSWORD varchar (30), "
+        				+ "SECURITY_QUESTION varchar (100), SECURITY_ANSWER varchar(30), HINT varchar(30))";
+                 statement.executeUpdate(updateTable);
+                
+                String updateTable1 = "CREATE TABLE literatureInfo(Question varchar(100), typeOfQuestion varchar(25), questionAnswer varchar(100))";
+                // statement.executeUpdate(updateTable1);
+
+        }
+
+        catch (SQLException ex) {
+
+                System.out.println(ex);
+
+        }
+
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
