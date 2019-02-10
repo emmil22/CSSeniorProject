@@ -29,7 +29,7 @@ public class Admin extends User{
 
 	
 		 
-	public  void createMusical(List<Musical> musicallist) {
+	public void createMusical(List<Musical> musicallist) {
 		
 		try {
 			dbc = DBConnectionManagerSingleton.getInstance();

@@ -10,11 +10,22 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
+<<<<<<< HEAD
 //import java.sql.ResultSet;
+=======
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+>>>>>>> branch 'master' of https://github.com/emmil22/CSSeniorProject
 import java.sql.SQLException;
 //import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
+<<<<<<< HEAD
 //import javax.imageio.ImageIO;
+=======
+
+
+>>>>>>> branch 'master' of https://github.com/emmil22/CSSeniorProject
 import javax.swing.*;
 //import java.io.File;
 //import java.io.IOException;
@@ -29,10 +40,16 @@ public class LogIn implements ActionListener {
 	private JTextField username;
 	private TextField PasswordText;
 	private User LogInUser;
+	private Error er;
 	private List<User> AllUsers;
 	private List<User> AdminUser;
+<<<<<<< HEAD
 	private List<Musical> MusicalList;
 	private ImageIcon ragtimeImage;
+=======
+	Admin a;
+
+>>>>>>> branch 'master' of https://github.com/emmil22/CSSeniorProject
 	
 	//Create Account Screen Variables
 	private String AdminCode = "s738*!dp";
@@ -83,19 +100,34 @@ public class LogIn implements ActionListener {
 
 	//Database Variables
 	DBConnectionManagerSingleton dbc;
-	Connection conn;
-	Statement stmt;
+	static Connection conn;
+	static Statement statement;
 	private User u;
 	private Error err;
 	ArrayList<User> users = new ArrayList<User>();
+<<<<<<< HEAD
 	ArrayList<Error> errors = new ArrayList<Error>();
 	
 	private JFrame UserFrame;
+=======
+	private JFrame frame1;
+	private JFrame frame2;
+>>>>>>> branch 'master' of https://github.com/emmil22/CSSeniorProject
 	private JScrollPane jscrlp;
+<<<<<<< HEAD
 	private boolean userTableCreated = false;
 	private Object[][] userObj;
 	private JTable userTable;
 	String [] userHeadings = {"First Name", "Last Name", "Username", "Password", 
+=======
+	private boolean tableCreated = false;
+	private boolean tableCreated1 = false;
+	private Object[][] obj;
+	private Object[][] obj1;
+	private JTable table;
+	private JTable table1;
+	String [] headings = {"First Name", "Last Name", "Username", "Password", 
+>>>>>>> branch 'master' of https://github.com/emmil22/CSSeniorProject
 			"Security Question","Security Answer", "Hint"};
 	
 	private JFrame errorFrame;
@@ -110,19 +142,19 @@ public class LogIn implements ActionListener {
 	LogIn() {
 		
 		//Create connection with database
-		/*try {
+	/*	try {
 			dbc = DBConnectionManagerSingleton.getInstance();
 		} catch (Exception e) {
 		}
 		
 		
 		conn = dbc.getConnection();
-		stmt = dbc.getStatement();
+		statement = dbc.getStatement();
 			
 			String viewRec = "SELECT * from USER_INFO";
 			ResultSet rs;
 			try {
-				rs = stmt.executeQuery(viewRec);
+				rs = statement.executeQuery(viewRec);
 			
 			
 
@@ -138,11 +170,11 @@ public class LogIn implements ActionListener {
 					users.add(u);
 					System.out.println(fn);
 				}
-			}catch (SQLException e) {
+			}catch (SQLException ex) {
 	
-				e.printStackTrace();
-			}*/
-		
+				ex.printStackTrace();
+			}
+		*/
 		//Create LogIn Screen Frame
 		logInScreen = new JFrame("Log In");
 		logInScreen.setLayout(null);
@@ -156,6 +188,7 @@ public class LogIn implements ActionListener {
 		//Create List of Users to login
 		AllUsers = new ArrayList<>();
 		AdminUser = new ArrayList<>();
+		MusicalList = new ArrayList<>();
 		LogInUser = null;
 		
 		//Create and edit labels
@@ -233,11 +266,25 @@ public class LogIn implements ActionListener {
 		createAccountScreen.setSize(screen);
 		createAccountScreen.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		
+<<<<<<< HEAD
 		UserFrame = new JFrame("User Data");
 		UserFrame.getContentPane().setLayout(new FlowLayout());
 		UserFrame.setSize(1000, 500);
 		UserFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		//updateTable();
+=======
+		frame1 = new JFrame("User Data");
+		frame1.getContentPane().setLayout(new FlowLayout());
+		frame1.setSize(1000, 500);
+		frame1.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		updateTable();
+		
+		frame2 = new JFrame("User Data");
+		frame2.getContentPane().setLayout(new FlowLayout());
+		frame2.setSize(1000, 500);
+		frame2.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		updateTable();
+>>>>>>> branch 'master' of https://github.com/emmil22/CSSeniorProject
 		//createAcoountScreen.setLayout(new Layout());
 		//createAccountScreen.setBounds(0,0,0,0); 
 		
@@ -446,10 +493,15 @@ public class LogIn implements ActionListener {
 		ErrorMessage.add(confirmError);
 		
 		brokenMic.setBounds(50,200, 400,50 );
-		Error.setBounds(125,220, 400,50 );
+		Error.setBounds(125,300, 400,50 );
 		bm.setBounds(50,250, 400,50 );
+<<<<<<< HEAD
 		errorText.setBounds(125,270, 400,50 );
 		confirmError.setBounds(50,350, 400,50 );
+=======
+		err.setBounds(125,350, 400,50 );
+		confirmError.setBounds(50,425, 400,50 );
+>>>>>>> branch 'master' of https://github.com/emmil22/CSSeniorProject
 		
 		/////////////////////////////////////////
 		
@@ -481,13 +533,13 @@ public class LogIn implements ActionListener {
 		
 		
 		MName.setBounds(50,200, 400,50 );
-		mName.setBounds(50,220, 400,50 );
+		mName.setBounds(300,220, 400,50 );
 		Actor.setBounds(50,250, 400,50 );
-		actor.setBounds(50,270, 400,50 );
+		actor.setBounds(300,270, 400,50 );
 		Roles.setBounds(50,300, 400,50 );
-		role.setBounds(50,320, 400,50 );
+		role.setBounds(300,320, 400,50 );
 		Songsin.setBounds(50,350, 400,50 );
-		songsin.setBounds(50,370, 400,50 );
+		songsin.setBounds(300,370, 400,50 );
 		confirmMusical.setBounds(325,500, 100,50 );
 		
 		confirmMusical.addActionListener(this);
@@ -655,14 +707,18 @@ public class LogIn implements ActionListener {
 				}
 			}
 			
-				/*	u = new User(FirstName.getText(), LastName.getText(),InitialUsername.
+					u = new User(FirstName.getText(), LastName.getText(),InitialUsername.
 				   getText(), InitialPassword.getText(), (String) securityQuestions
 				  .getSelectedItem(), SecurityAnswer.getText(), Hint.getText());
 					try {
-						stmt.executeUpdate("Insert into USER_INFO values("+"'" + FirstName.getText() + "',' "
+						statement.executeUpdate("Insert into USER_INFO values("+"'" + FirstName.getText() + "',' "
 					+ LastName.getText() + "','" + InitialUsername.getText() + "','"+ InitialPassword.getText() + "','"+ (String) securityQuestions
 					.getSelectedItem() + "','" + SecurityAnswer.getText() + "','"+ Hint.getText() +"')");
+<<<<<<< HEAD
 					} catch (SQLException e) {
+=======
+					} catch (SQLException ex) {
+>>>>>>> branch 'master' of https://github.com/emmil22/CSSeniorProject
 						ex.printStackTrace();
 					}
 				
@@ -670,9 +726,14 @@ public class LogIn implements ActionListener {
 				
 
 				this.users.add(u);
+<<<<<<< HEAD
 				updateUserTable();
 				*/
+=======
+				updateTable();
+>>>>>>> branch 'master' of https://github.com/emmil22/CSSeniorProject
 				
+<<<<<<< HEAD
 				username.setText("");
 				PasswordText.setText("");
 			
@@ -774,6 +835,10 @@ public class LogIn implements ActionListener {
 					
 				}
 			}
+=======
+				
+		
+>>>>>>> branch 'master' of https://github.com/emmil22/CSSeniorProject
 		}
 		if(e.getActionCommand().equals("SOS")) {
 			ErrorMessage.setVisible(true);
@@ -781,7 +846,11 @@ public class LogIn implements ActionListener {
 		}
 		
 		if(e.getActionCommand().equals("Display Table")) {
+<<<<<<< HEAD
 			UserFrame.setVisible(true);
+=======
+			frame1.setVisible(true);
+>>>>>>> branch 'master' of https://github.com/emmil22/CSSeniorProject
 		}
 		if(e.getActionCommand().equals("Forgot Password")) {
 			forgotPasswordScreen.setVisible(true);
@@ -796,9 +865,7 @@ public class LogIn implements ActionListener {
 			else {
 			MusicalList.add(new Musical(mName.getText(), actor.getText(),role.
 				   getText(), songsin.getText()));
-	
-			JOptionPane.showMessageDialog(createAccountScreen,"Data "
-					+ "successfuly created.");
+			a.createMusical(MusicalList);
 			}
 			
 		}
@@ -850,6 +917,20 @@ public class LogIn implements ActionListener {
 		}
 		
 		if(e.getActionCommand().equals("Confirm Error")) {
+			er = new Error(FirstName.getText(), LastName.getText(),InitialUsername.
+					   getText(), InitialPassword.getText());
+						try {
+							statement.executeUpdate("Insert into ERROR_LOG values("+"'" + mName.getText() + "',' "
+						+ actor.getText() + "','" + role.getText() + "','"+ songsin.getText() + "')");
+						} catch (SQLException ex) {
+							ex.printStackTrace();
+						}
+					
+					
+					
+
+					//this.e.add(er);
+					updateTable();
 			
 			err = new Error(FirstName.getText(), LastName.getText(),InitialUsername.
 					   getText(), InitialPassword.getText());
@@ -866,11 +947,19 @@ public class LogIn implements ActionListener {
 		
 	}
 	
+<<<<<<< HEAD
 	public void updateUserTable() {
 			
 			
 		if (userTableCreated) {
 			UserFrame.remove(jscrlp);
+=======
+	public void updateTable() {
+		
+		
+		if (tableCreated) {
+			frame1.remove(jscrlp);
+>>>>>>> branch 'master' of https://github.com/emmil22/CSSeniorProject
 		}
 		
 		userTableCreated = true;
@@ -907,9 +996,16 @@ public class LogIn implements ActionListener {
 	
 	public void updateErrorTable() {
 		
+<<<<<<< HEAD
 		
 		if (errorTableCreated) {
 			errorFrame.remove(jscrlp);
+=======
+		frame1.add(jscrlp);
+
+		if (frame1.isVisible()) {
+			frame1.setVisible(true);
+>>>>>>> branch 'master' of https://github.com/emmil22/CSSeniorProject
 		}
 		
 		errorTableCreated = true;
@@ -943,6 +1039,69 @@ public class LogIn implements ActionListener {
 	}
 	
 	public static void main(String[] args) throws IOException {
+		
+		   // Construct JFrame for entire program
+        JFrame jfm = new JFrame("Literature Application");
+
+        // EDIT APPLICATION JFRAME
+        jfm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jfm.setBackground(Color.BLACK);
+        jfm.setForeground(Color.BLACK);
+        jfm.setPreferredSize(new Dimension(1500, 1000));
+
+        // Construct Intro GUI
+       // introScreen g = new introScreen(jfm);
+
+        try {
+
+                String dbURL = "jdbc:sqlserver://localhost\\sqlexpress;";
+                String user = "sa";
+                String pass = "Suncoast$1";
+
+          
+                conn = DriverManager.getConnection(dbURL, user, pass);
+                if (conn != null) {
+                        DatabaseMetaData dm = conn.getMetaData();
+                        System.out.println("Driver name: " + dm.getDriverName());
+                        System.out.println("Driver version: " + dm.getDriverVersion());
+                        System.out.println("Product name: " + dm.getDatabaseProductName());
+                        System.out.println("Product version: " + dm.getDatabaseProductVersion());
+                }
+
+        }
+
+        catch (SQLException ex) {
+
+                System.out.println(ex);
+
+        }
+
+        try {
+
+                statement = conn.createStatement();
+
+                String update = "CREATE DATABASE SuncoastTheatre";
+                 statement.executeUpdate(update);
+
+                String user = "USE SuncoastTheatre";
+                statement.executeUpdate(user);
+
+                String updateTable = "Create table USER_INFO (FIRST_NAME varchar (30), LAST_NAME "
+        				+ "varchar (35), USERNAME varchar (30) primary key, PASSWORD varchar (30), "
+        				+ "SECURITY_QUESTION varchar (100), SECURITY_ANSWER varchar(30), HINT varchar(30))";
+                 statement.executeUpdate(updateTable);
+                
+                String updateTable1 = "CREATE TABLE literatureInfo(Question varchar(100), typeOfQuestion varchar(25), questionAnswer varchar(100))";
+                // statement.executeUpdate(updateTable1);
+
+        }
+
+        catch (SQLException ex) {
+
+                System.out.println(ex);
+
+        }
+
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
