@@ -31,9 +31,9 @@ public class ChatUI{
 	  }  
   
   public void sendText(){
-    if (connect.getText().equals("Connect")){
-    	JOptionPane.showMessageDialog(frame, "You need to connect first."); return;	
-    }
+   // if (connect.getText().equals("Connect")){
+    //	JOptionPane.showMessageDialog(frame, "You need to connect first."); return;	
+    //}
       String st=tf.getText();
       st="["+name.getText()+"] "+st;
       tf.setText("");

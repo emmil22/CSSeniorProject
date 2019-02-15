@@ -45,9 +45,9 @@ public class ChatClient {
 
 	public static void main(String[] args) {
 
-		String hostname = "Emilys-MacBook-Pro.local";
+		String hostname = "localhost";
 		int port = 2222;
-
+		//Emilys-MacBook-Pro.local
 		ChatClient client = new ChatClient(hostname, port);
 		client.execute();
 	}

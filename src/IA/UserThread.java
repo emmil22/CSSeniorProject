@@ -29,14 +29,14 @@ public class UserThread extends Thread {
 			server.addUserName(userName);
 
 			String serverMessage = "New user connected: " + userName;
-			server.broadcast(serverMessage, this);
+			server.showMessage(serverMessage, this);
 
 			String clientMessage;
 
 			do {
 				clientMessage = reader.readLine();
 				serverMessage = "[" + userName + "]: " + clientMessage;
-				server.broadcast(serverMessage, this);
+				server.showMessage(serverMessage, this);
 
 			} while (!clientMessage.equals("bye"));
 
@@ -44,7 +44,7 @@ public class UserThread extends Thread {
 			socket.close();
 
 			serverMessage = userName + " has quitted.";
-			server.broadcast(serverMessage, this);
+			server.showMessage(serverMessage, this);
 
 		} catch (IOException ex) {
 			System.out.println("Error in UserThread: " + ex.getMessage());

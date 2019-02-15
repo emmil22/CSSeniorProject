@@ -16,8 +16,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 
 import java.sql.SQLException;
+
 //import javax.swing.AbstractAction;
-import javax.swing.JCheckBox;
 
 //import javax.imageio.ImageIO;
 
@@ -27,6 +27,7 @@ import javax.swing.JCheckBox;
 import javax.swing.*;
 //import java.io.File;
 //import java.io.IOException;
+import javax.swing.border.EmptyBorder;
 
 //import Reference.CustomerOrder;
 
@@ -44,7 +45,10 @@ public class LogIn implements ActionListener {
 
 	private List<Musical> MusicalList;
 	private ImageIcon ragtimeImage;
-
+	  JTextArea tx;
+	  JTextField tf,ip, name;
+	  JButton logout;
+	  JList lst;
 	Admin a;
 
 
@@ -135,7 +139,9 @@ public class LogIn implements ActionListener {
 	private JTable errorTable;
 	String [] errorHeadings = {"Broken Mic", "Replaced Mic", "Error", "Time Logged"};
 	
-	
+	//Chat Application Variables
+	String hostname = "Emilys-MacBook-Pro.local";
+	int port = 2222;
 	/*******************************************************************************************************************************/
 	//Log In Screen
 	LogIn() {
@@ -456,11 +462,47 @@ public class LogIn implements ActionListener {
 	/**************************************************************************************************************************/
 		//Server Screen
 		
-		ServerScreen = new JFrame("Makeshift Servver");
-		ServerScreen.setLayout(null);
-		ServerScreen.setSize(screen);
-		ServerScreen.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		SOS = new JButton("SOS");
+		ServerScreen=new JFrame("Group Chat");
+	    JPanel main =new JPanel();
+	    JPanel top =new JPanel();
+	    JPanel cn =new JPanel();
+	    JPanel bottom =new JPanel();
+	    ip=new JTextField();
+	    tf=new JTextField();
+	    name=new JTextField();
+	    tx=new JTextArea();
+	    logout=new JButton("Log Out");
+	    JButton bt=new JButton("Send");
+	    lst=new JList();        
+	    main.setLayout(new BorderLayout(5,5));         
+	    top.setLayout(new GridLayout(1,0,5,5));   
+	    cn.setLayout(new BorderLayout(5,5));
+	    bottom.setLayout(new BorderLayout(5,5));
+	   // top.add(new JLabel("Your name: "));top.add(name);    
+	    //top.add(new JLabel("Server Address: "));top.add(ip);
+	    top.add(logout);
+	    cn.add(new JScrollPane(tx), BorderLayout.CENTER);        
+	    cn.add(lst, BorderLayout.EAST);    
+	    bottom.add(tf, BorderLayout.CENTER);    
+	    bottom.add(bt, BorderLayout.EAST);
+	    main.add(top, BorderLayout.NORTH);
+	    main.add(cn, BorderLayout.CENTER);
+	    main.add(bottom, BorderLayout.SOUTH);
+	    main.setBorder(new EmptyBorder(10, 10, 10, 10) );
+	    //Events
+	   /* logout.addActionListener(new ActionListener(){
+	      public void actionPerformed(ActionEvent e){ doConnect();   }  });
+	    bt.addActionListener(new ActionListener(){
+	      public void actionPerformed(ActionEvent e){ sendText();   }  });
+	    tf.addActionListener(new ActionListener(){
+	      public void actionPerformed(ActionEvent e){ sendText();   }  });
+	    */
+	    logout.addActionListener(this);
+	    bt.addActionListener(this);
+	    ServerScreen.setContentPane(main);
+	    ServerScreen.setSize(600,600);
+	    ServerScreen.setVisible(true);  
+		/*SOS = new JButton("SOS");
 		CreateMusical = new JButton("Create Musical");
 		
 		ServerScreen.add(SOS);
@@ -470,7 +512,7 @@ public class LogIn implements ActionListener {
 		SOS.setBounds(575,400, 175, 75);
 		
 		CreateMusical.addActionListener(this);
-		SOS.addActionListener(this);
+		SOS.addActionListener(this);*/
 		
 		/////////////////////////////////////////
 		
@@ -578,6 +620,9 @@ public class LogIn implements ActionListener {
 	                    if (LogInUser != null) {
 	    				 logInScreen.dispose();
 	    		        	ServerScreen.setVisible(true);
+	    		        	
+	    		        	ChatClient client = new ChatClient(hostname, port);
+	    		        	client.execute();
 	    		        }
 	    		        else
 	    		        {
@@ -1041,7 +1086,7 @@ public class LogIn implements ActionListener {
 
         // Construct Intro GUI
        // introScreen g = new introScreen(jfm);
-
+/*
         try {
 
                 String dbURL = "jdbc:sqlserver://localhost\\sqlexpress;";
@@ -1090,7 +1135,7 @@ public class LogIn implements ActionListener {
 
                 System.out.println(ex);
 
-        }
+        }*/
 
 
 		SwingUtilities.invokeLater(new Runnable() {
