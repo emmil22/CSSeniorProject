@@ -23,6 +23,10 @@ public class WriteThread extends Thread {
 		}
 	}
 	
+	public void sendMessage(String s) {
+		writer.println(s);
+	}
+	
 	public void run() {
 		
 		// Console console = System.console();
@@ -35,10 +39,10 @@ public class WriteThread extends Thread {
 		String text;
 		
 		do {
-			System.out.print("\n" + "[" + userName + "]:");
+//			System.out.print("\n" + "[" + userName + "]:");
 			text = input.nextLine();
 			// text = console.readLine("[" + userName + "]: ");
-			writer.println(text);
+			writer.println("[" + userName + "]:" + text);
 			
 		} while (!text.equals("log out"));
 		

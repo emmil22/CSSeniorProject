@@ -1,30 +1,43 @@
 package IA;
 
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.TextField;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 //import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.Socket;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Connection;
-//import java.sql.ResultSet;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-
-import java.sql.SQLException;
 
 //import javax.swing.AbstractAction;
 
 //import javax.imageio.ImageIO;
-
-
-
-
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 //import java.io.File;
 //import java.io.IOException;
 import javax.swing.border.EmptyBorder;
@@ -33,6 +46,9 @@ import javax.swing.border.EmptyBorder;
 
 
 public class LogIn implements ActionListener {
+	
+	private WriteThread writeThread;
+	private ReadThread readThread;
 	
 	//Log In Screen Variable
 	private JFrame logInScreen;
@@ -45,7 +61,7 @@ public class LogIn implements ActionListener {
 
 	private List<Musical> MusicalList;
 	private ImageIcon ragtimeImage;
-	  JTextArea tx;
+	  JTextArea messages;
 	  JTextField tf,ip, name;
 	  JButton logout;
 	  JList lst;
@@ -462,26 +478,39 @@ public class LogIn implements ActionListener {
 	/**************************************************************************************************************************/
 		//Server Screen
 		
-		ServerScreen=new JFrame("Group Chat");
-	    JPanel main =new JPanel();
-	    JPanel top =new JPanel();
-	    JPanel cn =new JPanel();
-	    JPanel bottom =new JPanel();
-	    ip=new JTextField();
-	    tf=new JTextField();
-	    name=new JTextField();
-	    tx=new JTextArea();
-	    logout=new JButton("Log Out");
-	    JButton bt=new JButton("Send");
-	    lst=new JList();        
+		ServerScreen = new JFrame("Group Chat");
+		JPanel main = new JPanel();
+		JPanel top = new JPanel();
+		JPanel cn = new JPanel();
+		JPanel bottom = new JPanel();
+		ip = new JTextField();
+		tf = new JTextField();
+		name = new JTextField();
+		messages = new JTextArea();
+		logout = new JButton("Log Out");
+		JButton bt = new JButton("Send");
+		lst = new JList();
 	    main.setLayout(new BorderLayout(5,5));         
 	    top.setLayout(new GridLayout(1,0,5,5));   
 	    cn.setLayout(new BorderLayout(5,5));
 	    bottom.setLayout(new BorderLayout(5,5));
 	   // top.add(new JLabel("Your name: "));top.add(name);    
 	    //top.add(new JLabel("Server Address: "));top.add(ip);
+	    ActionListener sendListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// will run when the text filed gets the enter button pressed or the button is pressed
+				String text = tf.getText();
+				tf.setText("");
+				System.err.println(text);
+				writeThread.sendMessage(text);
+			}
+		};
+		tf.addActionListener(sendListener);
+		bt.addActionListener(sendListener);
+		
 	    top.add(logout);
-	    cn.add(new JScrollPane(tx), BorderLayout.CENTER);        
+	    cn.add(new JScrollPane(messages), BorderLayout.CENTER);        
 	    cn.add(lst, BorderLayout.EAST);    
 	    bottom.add(tf, BorderLayout.CENTER);    
 	    bottom.add(bt, BorderLayout.EAST);
@@ -490,18 +519,27 @@ public class LogIn implements ActionListener {
 	    main.add(bottom, BorderLayout.SOUTH);
 	    main.setBorder(new EmptyBorder(10, 10, 10, 10) );
 	    //Events
-	   /* logout.addActionListener(new ActionListener(){
-	      public void actionPerformed(ActionEvent e){ doConnect();   }  });
-	    bt.addActionListener(new ActionListener(){
-	      public void actionPerformed(ActionEvent e){ sendText();   }  });
-	    tf.addActionListener(new ActionListener(){
-	      public void actionPerformed(ActionEvent e){ sendText();   }  });
-	    */
 	    logout.addActionListener(this);
-	    bt.addActionListener(this);
-	    ServerScreen.setContentPane(main);
-	    ServerScreen.setSize(600,600);
-	    ServerScreen.setVisible(true);  
+		bt.addActionListener(this);
+		ServerScreen.setContentPane(main);
+		ServerScreen.setSize(600, 600);
+		ServerScreen.setVisible(true);
+		
+		//---------------------------------------------------------NETWORK----------------------------------------------------------\\
+		// TODO edit these values with proper server vals
+		try {
+			String hostname = "localhost";
+			int port = 2222;
+			
+			Socket sock = new Socket(hostname, port);
+			this.writeThread = new WriteThread(sock, null);
+			this.readThread = new ReadThread(messages, sock, null);
+			this.writeThread.start();
+			this.readThread.start();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		//------------------------------------------------------END NETWORK----------------------------------------------------------\\
 		/*SOS = new JButton("SOS");
 		CreateMusical = new JButton("Create Musical");
 		

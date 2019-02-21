@@ -52,9 +52,7 @@ public class ChatServer {
 	 
 	void showMessage(String message, UserThread excludeUser) {
 		for (UserThread aUser : userThreads) {
-			if (aUser != excludeUser) {
-				aUser.sendMessage(message);
-			}
+			aUser.sendMessage(message);
 		}
 	}
 

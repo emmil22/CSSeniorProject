@@ -23,7 +23,7 @@ public class ChatClient {
 
 			
 
-			new ReadThread(socket, this).start();
+			new ReadThread(null, socket, this).start();
 			new WriteThread(socket, this).start();
 
 		} catch (UnknownHostException ex) {

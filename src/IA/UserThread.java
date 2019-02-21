@@ -1,14 +1,19 @@
 package IA;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 
 public class UserThread extends Thread {
 	private Socket socket;
 	private ChatServer server;
 	private PrintWriter writer;
+	private String userName;
 
 	public UserThread(Socket socket, ChatServer server) {
 		this.socket = socket;
@@ -23,28 +28,27 @@ public class UserThread extends Thread {
 			OutputStream output = socket.getOutputStream();
 			writer = new PrintWriter(output, true);
 
-			printUsers();
-
-			String userName = reader.readLine();
+			writer.println("Enter your username:");
+			
+			userName = reader.readLine();
 			server.addUserName(userName);
 
-			String serverMessage = "New user connected: " + userName;
-			server.showMessage(serverMessage, this);
+			server.showMessage("New user connected: " + userName, this);
+
+			printUsers();
 
 			String clientMessage;
 
 			do {
 				clientMessage = reader.readLine();
-				serverMessage = "[" + userName + "]: " + clientMessage;
-				server.showMessage(serverMessage, this);
+				server.showMessage("[" + userName + "]:" + clientMessage, this);
 
 			} while (!clientMessage.equals("bye"));
 
 			server.removeUser(userName, this);
 			socket.close();
 
-			serverMessage = userName + " has quitted.";
-			server.showMessage(serverMessage, this);
+			server.showMessage(userName + " has quit.", this);
 
 		} catch (IOException ex) {
 			System.out.println("Error in UserThread: " + ex.getMessage());
