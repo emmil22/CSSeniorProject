@@ -16,6 +16,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -37,6 +39,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 //import java.io.File;
 //import java.io.IOException;
@@ -62,7 +65,7 @@ public class LogIn implements ActionListener {
 	private List<Musical> MusicalList;
 	private ImageIcon ragtimeImage;
 	  JTextArea messages;
-	  JTextField tf,ip, name;
+	  JTextField chatbox,ip, name;
 	  JButton logout;
 	  JList lst;
 	Admin a;
@@ -478,41 +481,39 @@ public class LogIn implements ActionListener {
 	/**************************************************************************************************************************/
 		//Server Screen
 		
+		JToolBar toolbar = new JToolBar();
 		ServerScreen = new JFrame("Group Chat");
 		JPanel main = new JPanel();
 		JPanel top = new JPanel();
 		JPanel cn = new JPanel();
 		JPanel bottom = new JPanel();
-		ip = new JTextField();
-		tf = new JTextField();
-		name = new JTextField();
+		chatbox = new JTextField();
 		messages = new JTextArea();
 		logout = new JButton("Log Out");
 		JButton bt = new JButton("Send");
 		lst = new JList();
+		
 	    main.setLayout(new BorderLayout(5,5));         
 	    top.setLayout(new GridLayout(1,0,5,5));   
 	    cn.setLayout(new BorderLayout(5,5));
 	    bottom.setLayout(new BorderLayout(5,5));
-	   // top.add(new JLabel("Your name: "));top.add(name);    
-	    //top.add(new JLabel("Server Address: "));top.add(ip);
 	    ActionListener sendListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// will run when the text filed gets the enter button pressed or the button is pressed
-				String text = tf.getText();
-				tf.setText("");
+				String text = chatbox.getText();
+				chatbox.setText("");
 				System.err.println(text);
 				writeThread.sendMessage(text);
 			}
 		};
-		tf.addActionListener(sendListener);
+		chatbox.addActionListener(sendListener);
 		bt.addActionListener(sendListener);
 		
 	    top.add(logout);
 	    cn.add(new JScrollPane(messages), BorderLayout.CENTER);        
 	    cn.add(lst, BorderLayout.EAST);    
-	    bottom.add(tf, BorderLayout.CENTER);    
+	    bottom.add(chatbox, BorderLayout.CENTER);    
 	    bottom.add(bt, BorderLayout.EAST);
 	    main.add(top, BorderLayout.NORTH);
 	    main.add(cn, BorderLayout.CENTER);
@@ -523,11 +524,11 @@ public class LogIn implements ActionListener {
 		bt.addActionListener(this);
 		ServerScreen.setContentPane(main);
 		ServerScreen.setSize(600, 600);
-		ServerScreen.setVisible(true);
+		ServerScreen.setVisible(false);
 		
 		//---------------------------------------------------------NETWORK----------------------------------------------------------\\
 		// TODO edit these values with proper server vals
-		try {
+		/*try {
 			String hostname = "localhost";
 			int port = 2222;
 			
@@ -538,7 +539,7 @@ public class LogIn implements ActionListener {
 			this.readThread.start();
 		} catch (IOException e1) {
 			e1.printStackTrace();
-		}
+		}*/
 		//------------------------------------------------------END NETWORK----------------------------------------------------------\\
 		/*SOS = new JButton("SOS");
 		CreateMusical = new JButton("Create Musical");
@@ -626,7 +627,8 @@ public class LogIn implements ActionListener {
 		
 
 		
-		
+		//tooltiptext
+		//rollover
 	/**************************************************************************************************************************/
 	//Make Buttons Work Time!!!
 	ShowPassword.addActionListener(new ActionListener() {
@@ -1114,7 +1116,7 @@ public class LogIn implements ActionListener {
 	public static void main(String[] args) throws IOException {
 		
 		   // Construct JFrame for entire program
-        JFrame jfm = new JFrame("Literature Application");
+        JFrame jfm = new JFrame("");
 
         // EDIT APPLICATION JFRAME
         jfm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -1124,7 +1126,7 @@ public class LogIn implements ActionListener {
 
         // Construct Intro GUI
        // introScreen g = new introScreen(jfm);
-/*
+
         try {
 
                 String dbURL = "jdbc:sqlserver://localhost\\sqlexpress;";
@@ -1164,7 +1166,7 @@ public class LogIn implements ActionListener {
         				+ "SECURITY_QUESTION varchar (100), SECURITY_ANSWER varchar(30), HINT varchar(30))";
                  stmt.executeUpdate(updateTable);
                 
-                String updateTable1 = "CREATE TABLE literatureInfo(Question varchar(100), typeOfQuestion varchar(25), questionAnswer varchar(100))";
+                //String updateTable1 = "CREATE TABLE literatureInfo(Question varchar(100), typeOfQuestion varchar(25), questionAnswer varchar(100))";
                 // statement.executeUpdate(updateTable1);
 
         }
@@ -1173,7 +1175,7 @@ public class LogIn implements ActionListener {
 
                 System.out.println(ex);
 
-        }*/
+        }
 
 
 		SwingUtilities.invokeLater(new Runnable() {
